@@ -1,5 +1,7 @@
 package co.nimblehq.loyalty.sdk.model
 
+import java.util.*
+
 data class Reward(
     private val id: String,
     private val organizationId: String,
@@ -9,11 +11,8 @@ data class Reward(
     private val instructions: String,
     private val terms: String,
     private val state: String,
-    private val expiresOn: String?, // TODO Convert to Date
+    private val expiresOn: Date,
     private val pointCost: Int,
-    private val deletedAt: String?,
-    private val createdAt: String?,
-    private val updatedAt: String?,
     private val redeemedRewardsCount: Int,
     private val imageUrls: List<String>,
 )

@@ -2,6 +2,7 @@ package co.nimblehq.loyalty.sdk.api.response
 
 import co.nimblehq.loyalty.sdk.model.Reward
 import com.squareup.moshi.Json
+import java.util.*
 
 data class RewardResponse(
     @Json(name = "id")
@@ -21,15 +22,15 @@ data class RewardResponse(
     @Json(name = "type")
     var state: String?,
     @Json(name = "expires_on")
-    var expiresOn: String?,
+    var expiresOn: Date?,
     @Json(name = "point_cost")
     var pointCost: Int?,
     @Json(name = "deleted_at")
-    var deletedAt: String?,
+    var deletedAt: Date?,
     @Json(name = "created_at")
-    var createdAt: String?,
+    var createdAt: Date?,
     @Json(name = "updated_at")
-    var updatedAt: String?,
+    var updatedAt: Date?,
     @Json(name = "redeemed_rewards_count")
     var redeemedRewardsCount: Int?,
     @Json(name = "image_urls")
@@ -45,11 +46,8 @@ fun RewardResponse.toModel() = Reward(
     instructions = instructions.orEmpty(),
     terms = terms.orEmpty(),
     state = state.orEmpty(),
-    expiresOn = expiresOn,
+    expiresOn = expiresOn ?: Calendar.getInstance().time,
     pointCost = pointCost ?: 0,
-    deletedAt = deletedAt,
-    createdAt = createdAt,
-    updatedAt = updatedAt,
     redeemedRewardsCount = redeemedRewardsCount ?: 0,
     imageUrls = imageUrls.orEmpty(),
 )

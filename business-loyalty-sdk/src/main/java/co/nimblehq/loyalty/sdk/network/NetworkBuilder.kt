@@ -1,11 +1,14 @@
 package co.nimblehq.loyalty.sdk.network
 
+import co.nimblehq.loyalty.sdk.api.ApiService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
 
 abstract class NetworkBuilder {
+    internal val service: ApiService by lazy { buildService() }
+
     private var debugMode = false
     private var baseUrl = ""
     private var connectionTimeoutInSecond = 30L
@@ -69,7 +72,7 @@ abstract class NetworkBuilder {
             )
     }
 
-    internal inline fun <reified T> buildService(): T {
+    private inline fun <reified T> buildService(): T {
         return provideRetrofit().create(T::class.java)
     }
 }

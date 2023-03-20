@@ -1,15 +1,15 @@
 package co.nimblehq.loyalty.sdk
 
-import co.nimblehq.loyalty.sdk.api.ApiService
 import co.nimblehq.loyalty.sdk.api.request.BaseRequest
 import co.nimblehq.loyalty.sdk.api.request.Credentials
-import co.nimblehq.loyalty.sdk.api.response.toModel
 import co.nimblehq.loyalty.sdk.model.Reward
 import co.nimblehq.loyalty.sdk.network.NetworkBuilder
+import co.nimblehq.loyalty.sdk.repository.RewardRepository
+import co.nimblehq.loyalty.sdk.repository.RewardRepositoryImpl
 import kotlinx.coroutines.*
 
 class LoyaltySdk private constructor() : NetworkBuilder() {
-    private val service: ApiService by lazy { buildService() }
+    private val repository: RewardRepository by lazy { RewardRepositoryImpl(service) }
 
     companion object {
         val instance: LoyaltySdk by lazy { LoyaltySdk() }
@@ -48,8 +48,8 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
     fun getRewards(onResponse: (Result<List<Reward>>) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             val result = try {
-                val result = service.getRewards()
-                Result.Success(result.toModel())
+                val result = repository.getReward()
+                Result.Success(result)
             } catch (exception: Exception) {
                 exception.printStackTrace()
                 Result.Error(exception)

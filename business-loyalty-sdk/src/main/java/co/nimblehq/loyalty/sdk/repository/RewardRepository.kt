@@ -1,15 +1,18 @@
 package co.nimblehq.loyalty.sdk.repository
 
+import co.nimblehq.loyalty.sdk.api.ApiService
+import co.nimblehq.loyalty.sdk.api.response.toModel
 import co.nimblehq.loyalty.sdk.model.Reward
 
-interface RewardRepository {
-    fun getReward(): List<Reward>
+internal interface RewardRepository {
+    suspend fun getReward(): List<Reward>
 }
 
-class RewardRepositoryImpl(
-
+internal class RewardRepositoryImpl(
+    private val apiService: ApiService
 ): RewardRepository {
-    override fun getReward(): List<Reward> {
-        TODO("Not yet implemented")
+
+    override suspend fun getReward(): List<Reward> {
+        return apiService.getRewards().toModel()
     }
 }
