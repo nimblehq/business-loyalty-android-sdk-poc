@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.Intent
 import co.nimblehq.loyalty.sdk.api.request.BaseRequest
 import co.nimblehq.loyalty.sdk.api.request.Credentials
+import co.nimblehq.loyalty.sdk.model.RedeemReward
 import co.nimblehq.loyalty.sdk.model.Reward
 import co.nimblehq.loyalty.sdk.network.NetworkBuilder
 import co.nimblehq.loyalty.sdk.ui.authenticate.AuthenticationActivity
@@ -54,6 +55,22 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
         GlobalScope.launch(Dispatchers.IO) {
             val result = try {
                 val result = rewardRepository.getReward()
+                Result.Success(result)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                Result.Error(exception)
+            }
+            withContext(Dispatchers.Main) {
+                onResponse(result)
+            }
+        }
+    }
+
+    @DelicateCoroutinesApi
+    fun redeemReward(rewardId: String, onResponse: (Result<RedeemReward>) -> Unit) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = try {
+                val result = rewardRepository.redeemReward(rewardId)
                 Result.Success(result)
             } catch (exception: Exception) {
                 exception.printStackTrace()
