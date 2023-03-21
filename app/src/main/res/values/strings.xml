@@ -1,3 +1,9 @@
 <resources>
-    <string name="app_name">business-loyalty-android-sdk-poc</string>
+    <string name="app_name">Loyalty SDK Sample</string>
+
+    <string name="login_scheme">nimble-cx</string>
+    <string name="login_host">oauth</string>
+    <string name="login_path">/callback</string>
+
+    <string name="main_sign_in">SignIn</string>
 </resources>
