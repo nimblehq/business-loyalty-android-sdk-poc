@@ -1,0 +1,7 @@
+<resources>
+    <string name="title_activity_authentication">AuthenticationActivity</string>
+
+    <string name="login_scheme">nimble-cx</string>
+    <string name="login_host">oauth</string>
+    <string name="login_path">/callback</string>
+</resources>

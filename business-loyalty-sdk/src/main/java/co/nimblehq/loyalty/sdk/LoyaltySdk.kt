@@ -1,15 +1,15 @@
 package co.nimblehq.loyalty.sdk
 
+import android.content.Context
+import android.content.Intent
 import co.nimblehq.loyalty.sdk.api.request.BaseRequest
 import co.nimblehq.loyalty.sdk.api.request.Credentials
 import co.nimblehq.loyalty.sdk.model.Reward
 import co.nimblehq.loyalty.sdk.network.NetworkBuilder
-import co.nimblehq.loyalty.sdk.repository.RewardRepository
-import co.nimblehq.loyalty.sdk.repository.RewardRepositoryImpl
+import co.nimblehq.loyalty.sdk.ui.authenticate.AuthenticationActivity
 import kotlinx.coroutines.*
 
 class LoyaltySdk private constructor() : NetworkBuilder() {
-    private val repository: RewardRepository by lazy { RewardRepositoryImpl(service) }
 
     companion object {
         val instance: LoyaltySdk by lazy { LoyaltySdk() }
@@ -22,6 +22,11 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
 
     fun withBaseUrl(url: String): LoyaltySdk {
         setBaseUrl(url)
+        return this
+    }
+
+    fun withBaseAuthorizationUrl(url: String): LoyaltySdk {
+        setBaseAuthorizationUrl(url)
         return this
     }
 
@@ -48,7 +53,7 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
     fun getRewards(onResponse: (Result<List<Reward>>) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             val result = try {
-                val result = repository.getReward()
+                val result = rewardRepository.getReward()
                 Result.Success(result)
             } catch (exception: Exception) {
                 exception.printStackTrace()
@@ -57,6 +62,14 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
             withContext(Dispatchers.Main) {
                 onResponse(result)
             }
+        }
+    }
+
+    fun authenticate(context: Context) {
+        with(context) {
+            startActivity(
+                Intent(this, AuthenticationActivity::class.java)
+            )
         }
     }
 }
