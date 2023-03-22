@@ -1,8 +1,11 @@
 package co.nimblehq.loyalty.sdk.network
 
+import android.content.Context
 import co.nimblehq.loyalty.sdk.BuildConfig
 import co.nimblehq.loyalty.sdk.api.ApiService
 import co.nimblehq.loyalty.sdk.api.AuthenticationService
+import co.nimblehq.loyalty.sdk.api.interceptor.AuthorizationInterceptor
+import co.nimblehq.loyalty.sdk.persistence.PersistenceProvider
 import co.nimblehq.loyalty.sdk.repository.AuthenticationRepository
 import co.nimblehq.loyalty.sdk.repository.AuthenticationRepositoryImpl
 import co.nimblehq.loyalty.sdk.repository.RewardRepository
@@ -11,6 +14,9 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import java.util.concurrent.TimeUnit
+
+private const val CONNECTION_TIMEOUT_IN_SECOND = 30L
+private const val READ_TIMEOUT_IN_SECOND = 30L
 
 abstract class NetworkBuilder {
     private val apiService: ApiService by lazy { buildService() }
@@ -21,53 +27,31 @@ abstract class NetworkBuilder {
         AuthenticationRepositoryImpl(authenticationService)
     }
 
+    private lateinit var context: Context
     private var debugMode = false
-    private var baseUrl = ""
-    private var baseAuthorizationUrl = ""
-    private var connectionTimeoutInSecond = 30L
-    private var readTimeoutInSecond = 30L
-    private var token = ""
-    private var tokenType = ""
+    internal var clientId = ""
+    internal var clientSecret = ""
 
-    fun setDebugMode(debugMode: Boolean): NetworkBuilder {
+    fun setContext(context: Context) {
+        this.context = context
+    }
+
+    fun setDebugMode(debugMode: Boolean) {
         this.debugMode = debugMode
-        return this
     }
 
-    fun setBaseUrl(url: String): NetworkBuilder {
-        this.baseUrl = url
-        return this
+    fun setClientId(clientId: String) {
+        this.clientId = clientId
     }
 
-    fun setBaseAuthorizationUrl(url: String): NetworkBuilder {
-        this.baseAuthorizationUrl = url
-        return this
-    }
-
-    fun setConnectionTimeoutInSecond(timeout: Long): NetworkBuilder {
-        this.connectionTimeoutInSecond = timeout
-        return this
-    }
-
-    fun setReadTimeoutInSecond(timeout: Long): NetworkBuilder {
-        this.readTimeoutInSecond = timeout
-        return this
-    }
-
-    fun setToken(token: String): NetworkBuilder {
-        this.token = token
-        return this
-    }
-
-    fun setTokenType(tokenType: String): NetworkBuilder {
-        this.tokenType = tokenType
-        return this
+    fun setClientSecret(clientSecret: String) {
+        this.clientSecret = clientSecret
     }
 
     private fun provideRetrofit(): Retrofit {
         val client: OkHttpClient = OkHttpClient.Builder()
-            .connectTimeout(connectionTimeoutInSecond, TimeUnit.SECONDS)
-            .readTimeout(readTimeoutInSecond, TimeUnit.SECONDS)
+            .connectTimeout(CONNECTION_TIMEOUT_IN_SECOND, TimeUnit.SECONDS)
+            .readTimeout(READ_TIMEOUT_IN_SECOND, TimeUnit.SECONDS)
             .addInterceptor(provideLoggingInterceptor()).build()
         return provideRetrofitBuilder()
             .client(client)
@@ -76,9 +60,11 @@ abstract class NetworkBuilder {
 
     private fun provideAuthenticationRetrofit(): Retrofit {
         val client: OkHttpClient = OkHttpClient.Builder()
-            .connectTimeout(connectionTimeoutInSecond, TimeUnit.SECONDS)
-            .readTimeout(readTimeoutInSecond, TimeUnit.SECONDS)
-            .addInterceptor(provideLoggingInterceptor()).build() // TODO Add TokenInterceptor
+            .connectTimeout(CONNECTION_TIMEOUT_IN_SECOND, TimeUnit.SECONDS)
+            .readTimeout(READ_TIMEOUT_IN_SECOND, TimeUnit.SECONDS)
+            .addInterceptor(provideAuthorizationInterceptor())
+            .addInterceptor(provideLoggingInterceptor())
+            .build()
         return provideAuthorizationRetrofitBuilder()
             .client(client)
             .build()
@@ -89,6 +75,11 @@ abstract class NetworkBuilder {
             level =
                 if (debugMode) HttpLoggingInterceptor.Level.BODY else HttpLoggingInterceptor.Level.NONE
         }
+
+    private fun provideAuthorizationInterceptor() =
+        AuthorizationInterceptor(
+            PersistenceProvider.getAuthPersistence(context)
+        )
 
     private fun provideRetrofitBuilder(): Retrofit.Builder {
         return Retrofit.Builder()

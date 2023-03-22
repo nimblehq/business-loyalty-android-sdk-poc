@@ -15,6 +15,8 @@ import co.nimblehq.loyalty.sdk.BuildConfig
 import co.nimblehq.loyalty.sdk.LoyaltySdk
 import co.nimblehq.loyalty.sdk.R
 import co.nimblehq.loyalty.sdk.databinding.ActivityAuthenticationBinding
+import co.nimblehq.loyalty.sdk.persistence.AuthPersistence
+import co.nimblehq.loyalty.sdk.persistence.PersistenceProvider
 import co.nimblehq.loyalty.sdk.repository.AuthenticationRepository
 import kotlinx.coroutines.*
 import java.net.URL
@@ -33,7 +35,11 @@ class AuthenticationActivity : AppCompatActivity() {
     private lateinit var binding: ActivityAuthenticationBinding
 
     private val authenticationRepository: AuthenticationRepository by lazy {
-        LoyaltySdk.instance.authenticationRepository
+        LoyaltySdk.getInstance().authenticationRepository
+    }
+
+    private val authPersistence: AuthPersistence by lazy {
+        PersistenceProvider.getAuthPersistence(this.applicationContext)
     }
 
     private val loginWebViewClient by lazy {
@@ -105,13 +111,13 @@ class AuthenticationActivity : AppCompatActivity() {
     private fun getLoadingUrl(): String {
         val uri = Uri.parse("${BuildConfig.AUTHENTICATION_API_URL}authorize")
             .buildUpon()
-            .appendQueryParameter(CLIENT_ID, BuildConfig.CLIENT_ID)
+            .appendQueryParameter(CLIENT_ID, LoyaltySdk.getInstance().clientId)
             .appendQueryParameter(REDIRECT_URI, getRedirectUrl())
             .appendQueryParameter(RESPONSE_TYPE, RESPONSE_TYPE_CODE)
             .appendQueryParameter(SCOPE, SCOPE_READ)
             .build()
         return URL(uri.toString()).toString().also {
-            Log.d(TAG,"Loading url >>> $it")
+            Log.d(TAG, "Loading url >>> $it")
         }
     }
 
@@ -124,12 +130,14 @@ class AuthenticationActivity : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 showLoading()
             }
-            authenticationRepository.requestAccessToken(
-                clientId = BuildConfig.CLIENT_ID,
-                clientSecret = BuildConfig.CLIENT_SECRET,
+            val token = authenticationRepository.requestAccessToken(
+                clientId = LoyaltySdk.getInstance().clientId,
+                clientSecret = LoyaltySdk.getInstance().clientSecret,
                 code = code,
                 redirectUri = redirectUrl
             )
+            authPersistence.saveAccessToken(token.accessToken.orEmpty())
+            authPersistence.saveTokenType(token.tokenType.orEmpty())
             withContext(Dispatchers.Main) {
                 hideLoading()
                 finish()
