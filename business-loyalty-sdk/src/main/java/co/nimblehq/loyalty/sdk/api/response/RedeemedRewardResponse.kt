@@ -6,67 +6,67 @@ import java.util.*
 
 data class RedeemedRewardResponse(
     @Json(name = "id")
-    var id: String?,
+    val id: String?,
     @Json(name = "organization_id")
-    var organizationId: String?,
+    val organizationId: String?,
     @Json(name = "customer_id")
-    var customerId: String?,
+    val customerId: String?,
     @Json(name = "reward_id")
-    var rewardId: String?,
+    val rewardId: String?,
     @Json(name = "state")
-    var state: String?,
+    val state: String?,
     @Json(name = "point_cost")
-    var pointCost: Int?,
+    val pointCost: Int?,
     @Json(name = "images")
-    var images: String?,
+    val images: String?,
     @Json(name = "created_at")
-    var createdAt: Date?,
+    val createdAt: Date?,
     @Json(name = "updated_at")
-    var updatedAt: Date?,
+    val updatedAt: Date?,
     @Json(name = "reward")
-    var reward: RewardResponse,
+    val reward: RewardResponse,
 ) {
     data class RewardResponse(
         @Json(name = "id")
-        var id: String?,
+        val id: String?,
         @Json(name = "organization_id")
-        var organizationId: String?,
+        val organizationId: String?,
         @Json(name = "name")
-        var name: String?,
+        val name: String?,
         @Json(name = "description")
-        var description: String?,
+        val description: String?,
         @Json(name = "conditions")
-        var conditions: String?,
+        val conditions: String?,
         @Json(name = "instructions")
-        var instructions: String?,
+        val instructions: String?,
         @Json(name = "images")
-        var images: RedeemedRewardImageResponse?,
+        val images: RedeemedRewardImageResponse?,
         @Json(name = "terms")
-        var terms: String?,
+        val terms: String?,
         @Json(name = "type")
-        var type: String?,
+        val type: String?,
         @Json(name = "state")
-        var state: String?,
+        val state: String?,
         @Json(name = "expires_on")
-        var expiresOn: Date?,
+        val expiresOn: Date?,
         @Json(name = "point_cost")
-        var pointCost: Int?,
+        val pointCost: Int?,
         @Json(name = "deleted_at")
-        var deletedAt: Date?,
+        val deletedAt: Date?,
         @Json(name = "created_at")
-        var createdAt: Date?,
+        val createdAt: Date?,
         @Json(name = "updated_at")
-        var updatedAt: Date?,
+        val updatedAt: Date?,
         @Json(name = "redeemed_rewards_count")
-        var redeemedRewardsCount: Int?,
+        val redeemedRewardsCount: Int?,
     ) {
         data class RedeemedRewardImageResponse(
             @Json(name = "cdn_url")
-            var cdnUrl: String?,
+            val cdnUrl: String?,
             @Json(name = "id")
-            var id: String?,
+            val id: String?,
             @Json(name = "files_count")
-            var filesCount: String?,
+            val filesCount: String?,
         )
     }
 }
@@ -92,6 +92,12 @@ fun RedeemedRewardResponse.RewardResponse.toModel() = RedeemedReward.Reward(
     conditions = conditions,
     instructions = instructions,
     images = images?.toModel(),
+    terms = terms,
+    type = type,
+    state = state,
+    expiresOn = expiresOn,
+    pointCost = pointCost,
+    redeemedRewardsCount = redeemedRewardsCount,
 )
 
 fun RedeemedRewardResponse.RewardResponse.RedeemedRewardImageResponse.toModel() =

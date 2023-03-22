@@ -6,48 +6,50 @@ import java.util.*
 
 data class RewardResponse(
     @Json(name = "id")
-    var id: String?,
+    val id: String? = null,
     @Json(name = "organization_id")
-    var organizationId: String?,
+    val organizationId: String? = null,
     @Json(name = "name")
-    var name: String?,
+    val name: String? = null,
     @Json(name = "description")
-    var description: String?,
+    val description: String? = null,
     @Json(name = "conditions")
-    var conditions: String?,
+    val conditions: String? = null,
     @Json(name = "instructions")
-    var instructions: String?,
+    val instructions: String? = null,
     @Json(name = "terms")
-    var terms: String?,
+    val terms: String? = null,
     @Json(name = "type")
-    var state: String?,
+    val type: String? = null,
+    @Json(name = "state")
+    val state: String? = null,
     @Json(name = "expires_on")
-    var expiresOn: Date?,
+    val expiresOn: Date? = null,
     @Json(name = "point_cost")
-    var pointCost: Int?,
+    val pointCost: Int? = null,
     @Json(name = "deleted_at")
-    var deletedAt: Date?,
+    val deletedAt: Date? = null,
     @Json(name = "created_at")
-    var createdAt: Date?,
+    val createdAt: Date? = null,
     @Json(name = "updated_at")
-    var updatedAt: Date?,
+    val updatedAt: Date? = null,
     @Json(name = "redeemed_rewards_count")
-    var redeemedRewardsCount: Int?,
+    val redeemedRewardsCount: Int? = null,
     @Json(name = "image_urls")
-    var imageUrls: List<String>?,
+    val imageUrls: List<String>? = null,
 )
 
 fun RewardResponse.toModel() = Reward(
-    id = id.orEmpty(),
-    organizationId = organizationId.orEmpty(),
-    name = name.orEmpty(),
-    description = description.orEmpty(),
-    conditions = conditions.orEmpty(),
-    instructions = instructions.orEmpty(),
-    terms = terms.orEmpty(),
-    state = state.orEmpty(),
-    expiresOn = expiresOn ?: Calendar.getInstance().time,
-    pointCost = pointCost ?: 0,
-    redeemedRewardsCount = redeemedRewardsCount ?: 0,
-    imageUrls = imageUrls.orEmpty(),
+    id = id,
+    organizationId = organizationId,
+    name = name,
+    description = description,
+    conditions = conditions,
+    instructions = instructions,
+    terms = terms,
+    state = state,
+    expiresOn = expiresOn,
+    pointCost = pointCost,
+    redeemedRewardsCount = redeemedRewardsCount,
+    imageUrls = imageUrls,
 )

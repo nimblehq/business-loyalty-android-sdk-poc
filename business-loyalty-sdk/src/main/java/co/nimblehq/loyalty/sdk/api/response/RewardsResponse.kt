@@ -4,9 +4,9 @@ import com.squareup.moshi.Json
 
 data class RewardsResponse(
     @Json(name = "rewards")
-    var rewards: List<RewardResponse>
+    val rewards: List<RewardResponse>? = null
 )
 
-fun RewardsResponse.toModel() = this.rewards.map { rewardResponse ->
+fun RewardsResponse.toModel() = this.rewards?.map { rewardResponse ->
     rewardResponse.toModel()
 }

@@ -1,9 +1,9 @@
 package co.nimblehq.loyalty.sdk.model
 
 data class OauthToken(
-    val accessToken: String? = null,
-    val tokenType: String? = null,
-    val expiresIn: Long? = null,
-    val scope: String? = null,
-    val createdAt: Long? = null
+    val accessToken: String?,
+    val tokenType: String?,
+    val expiresIn: Long?,
+    val scope: String?,
+    val createdAt: Long?,
 )
