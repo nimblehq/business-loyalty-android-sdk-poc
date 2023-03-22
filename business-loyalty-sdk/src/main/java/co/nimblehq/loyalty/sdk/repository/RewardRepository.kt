@@ -20,7 +20,7 @@ internal class RewardRepositoryImpl(
 ): RewardRepository {
 
     override suspend fun getReward(): List<Reward> {
-        return apiService.getRewards().toModel()
+        return apiService.getRewards().toModel().orEmpty()
     }
 
     override suspend fun redeemReward(rewardId: String): RedeemReward {
