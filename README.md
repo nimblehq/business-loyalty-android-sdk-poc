@@ -1,12 +1,18 @@
-# Git Repository Template
+# Loyalty SDK
 
-Project repository template to set up all public projects at [Nimble](https://nimblehq.co/)
+This repository demonstrates the Loyalty SDK and sample app for demonstration.
 
 ## Usage
 
-Clone the repository
+- Clone the repository
 
-`git clone git@github.com:nimblehq/git-template.git`
+`git clone git@github.com:nimblehq/business-loyalty-android-sdk-poc.git`
+
+- Open `sampleapp` folder and build the project
+
+## SDK Integration
+
+TBD
 
 ## License
 

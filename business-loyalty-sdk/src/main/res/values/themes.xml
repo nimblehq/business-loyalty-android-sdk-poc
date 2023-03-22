@@ -1,0 +1,9 @@
+<resources>
+
+    <style name="Theme.Loyalty" parent="@style/Theme.MaterialComponents.Light.NoActionBar">
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:windowLightStatusBar">true</item>
+        <item name="colorPrimary">@color/coffee_bean_purple</item>
+        <item name="colorSecondary">@color/coffee_bean_purple</item>
+    </style>
+</resources>

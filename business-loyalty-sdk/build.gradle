@@ -8,6 +8,10 @@ def versionPropertiesFile = rootProject.file("./version.properties")
 def versionProperties = new Properties()
 versionProperties.load(new FileInputStream(versionPropertiesFile))
 
+def apikeyPropertiesFile = rootProject.file("./apikeys.properties")
+def apikeyProperties = new Properties()
+apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+
 android {
     namespace 'co.nimblehq.loyalty.sdk'
     compileSdk 33
@@ -20,12 +24,21 @@ android {
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
+
+        buildConfigField "String", "BASE_API_URL", apikeyProperties["baseApiUrl"]
+        buildConfigField "String", "AUTHENTICATION_API_URL", apikeyProperties["authenticationApiUrl"]
+        buildConfigField "String", "CLIENT_ID", apikeyProperties["clientId"]
+        buildConfigField "String", "CLIENT_SECRET", apikeyProperties["clientSecret"]
     }
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+
+        debug {
+            minifyEnabled false
         }
     }
     compileOptions {
@@ -35,6 +48,9 @@ android {
     kotlinOptions {
         jvmTarget = '1.8'
     }
+    buildFeatures {
+        viewBinding true
+    }
 }
 
 dependencies {
@@ -42,6 +58,8 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
+
+    implementation 'com.github.nimblehq:android-common-ktx:0.1.1'
 
     api 'com.squareup.retrofit2:retrofit:2.9.0'
     api 'com.squareup.okhttp3:okhttp:4.10.0'

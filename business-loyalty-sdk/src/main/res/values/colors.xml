@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="grey">#edf2f7</color>
+
+    <color name="dark_gunmetal">#1A202C</color>
+    <color name="slate_gray">#718096</color>
+    <color name="coffee_bean_purple">#522D6D</color>
+    <color name="anti_flash_white">#EDF2F7</color>
+    <color name="sea_green">#38A169</color>
+    <color name="ghost_white">#F7FAFC</color>
+</resources>

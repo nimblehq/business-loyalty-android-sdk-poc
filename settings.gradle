@@ -10,8 +10,9 @@ dependencyResolutionManagement {
     repositories {
         google()
         mavenCentral()
+        maven { url "https://jitpack.io" }
     }
 }
 rootProject.name = "business-loyalty-android-sdk-poc"
-include ':app'
+include ':sampleapp'
 include ':business-loyalty-sdk'
