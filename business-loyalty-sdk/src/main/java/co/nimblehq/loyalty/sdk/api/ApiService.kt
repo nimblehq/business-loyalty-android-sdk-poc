@@ -1,6 +1,7 @@
 package co.nimblehq.loyalty.sdk.api
 
 import co.nimblehq.loyalty.sdk.api.response.RedeemRewardResponse
+import co.nimblehq.loyalty.sdk.api.response.RedeemedRewardResponse
 import co.nimblehq.loyalty.sdk.api.response.RewardsResponse
 import retrofit2.http.GET
 import retrofit2.http.PATCH
@@ -14,4 +15,7 @@ interface ApiService {
     suspend fun redeemReward(
         @Path("reward_id") rewardId: String
     ): RedeemRewardResponse
+
+    @GET("/redeemed_rewards.json")
+    suspend fun getRedeemedRewards(): List<RedeemedRewardResponse>
 }
