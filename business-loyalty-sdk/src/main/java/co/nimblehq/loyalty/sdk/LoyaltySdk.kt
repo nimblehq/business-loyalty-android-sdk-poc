@@ -1,5 +1,6 @@
 package co.nimblehq.loyalty.sdk
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import co.nimblehq.loyalty.sdk.model.RedeemReward
@@ -11,8 +12,44 @@ import kotlinx.coroutines.*
 
 class LoyaltySdk private constructor() : NetworkBuilder() {
 
-    companion object {
-        val instance: LoyaltySdk by lazy { LoyaltySdk() }
+    companion object Builder {
+        // FIXME Revise this warning
+        @SuppressLint("StaticFieldLeak")
+        private lateinit var instance: LoyaltySdk
+
+        // FIXME Revise this warning
+        @SuppressLint("StaticFieldLeak")
+        private var context: Context? = null
+        private var isDebugMode: Boolean = false
+        private var clientId: String = ""
+        private var clientSecret: String = ""
+
+        fun withContext(context: Context) = apply { this.context = context.applicationContext }
+
+        fun withDebugMode(isDebugMode: Boolean) = apply { this.isDebugMode = isDebugMode }
+
+        fun withClientId(clientId: String) = apply { this.clientId = clientId }
+
+        fun withClientSecret(clientSecret: String) = apply { this.clientSecret = clientSecret }
+        fun init() {
+            instance = LoyaltySdk().also { sdk ->
+                context?.let{
+                    sdk.setContext(it)
+                } ?: throw RuntimeException("Context must not be null")
+                sdk.setClientId(clientId)
+                sdk.setClientSecret(clientSecret)
+                sdk.setDebugMode(isDebugMode)
+            }
+        }
+
+        fun getInstance(): LoyaltySdk {
+            synchronized(this) {
+                if (!::instance.isInitialized) {
+                    throw RuntimeException("LoyaltySdk has not been initialized. Initialize new instance by using LoyaltySdk.Builder")
+                }
+                return instance
+            }
+        }
     }
 
     @DelicateCoroutinesApi
@@ -63,8 +100,8 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
         }
     }
 
-    fun authenticate(context: Context) {
-        with(context) {
+    fun authenticate(activityContext: Context) {
+        with(activityContext) {
             startActivity(
                 Intent(this, AuthenticationActivity::class.java)
             )

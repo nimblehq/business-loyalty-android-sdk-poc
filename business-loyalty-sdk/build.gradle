@@ -8,9 +8,9 @@ def versionPropertiesFile = rootProject.file("./version.properties")
 def versionProperties = new Properties()
 versionProperties.load(new FileInputStream(versionPropertiesFile))
 
-def apikeyPropertiesFile = rootProject.file("./apikeys.properties")
-def apikeyProperties = new Properties()
-apikeyProperties.load(new FileInputStream(apikeyPropertiesFile))
+def apiConfigsPropertiesFile = rootProject.file("./apiconfigs.properties")
+def apiConfigsProperties = new Properties()
+apiConfigsProperties.load(new FileInputStream(apiConfigsPropertiesFile))
 
 android {
     namespace 'co.nimblehq.loyalty.sdk'
@@ -25,10 +25,8 @@ android {
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         consumerProguardFiles "consumer-rules.pro"
 
-        buildConfigField "String", "BASE_API_URL", apikeyProperties["baseApiUrl"]
-        buildConfigField "String", "AUTHENTICATION_API_URL", apikeyProperties["authenticationApiUrl"]
-        buildConfigField "String", "CLIENT_ID", apikeyProperties["clientId"]
-        buildConfigField "String", "CLIENT_SECRET", apikeyProperties["clientSecret"]
+        buildConfigField "String", "BASE_API_URL", apiConfigsProperties["baseApiUrl"]
+        buildConfigField "String", "AUTHENTICATION_API_URL", apiConfigsProperties["authenticationApiUrl"]
     }
 
     buildTypes {
@@ -58,6 +56,9 @@ dependencies {
     implementation 'androidx.core:core-ktx:1.9.0'
     implementation 'androidx.appcompat:appcompat:1.6.1'
     implementation 'com.google.android.material:material:1.8.0'
+
+    implementation 'androidx.security:security-crypto-ktx:1.1.0-alpha05'
+    implementation "androidx.security:security-identity-credential:1.0.0-alpha03"
 
     implementation 'com.github.nimblehq:android-common-ktx:0.1.1'
 
