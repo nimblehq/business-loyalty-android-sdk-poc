@@ -7,11 +7,12 @@ class SampleAppApplication : Application() {
 
     override fun onCreate() {
         super.onCreate()
+        // TODO Add your keys
         LoyaltySdk.Builder
             .withContext(this)
             .withDebugMode(BuildConfig.DEBUG)
-            .withClientId("MRC6bwFASOm0sJYPYwVEt2KD51bkAtdgS7ltqeDYUf4")
-            .withClientSecret("wNcVKqTlLFGkGUOYgpqDREzwiOm_8Y3MQxPzYYzzd1o")
+            .withClientId("CLIENT_ID")
+            .withClientSecret("CLIENT_SECRET")
             .init()
     }
 }
