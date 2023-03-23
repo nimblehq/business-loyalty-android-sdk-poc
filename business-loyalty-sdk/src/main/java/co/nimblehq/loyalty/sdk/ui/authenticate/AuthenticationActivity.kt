@@ -30,7 +30,7 @@ private const val SCOPE_READ = "read"
 
 private val TAG = AuthenticationActivity::class.simpleName
 
-class AuthenticationActivity : AppCompatActivity() {
+internal class AuthenticationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAuthenticationBinding
 
@@ -98,6 +98,12 @@ class AuthenticationActivity : AppCompatActivity() {
             webViewClient = loginWebViewClient
             loadUrl(getLoadingUrl())
         }
+    }
+
+    override fun onDestroy() {
+        // Clear WebView cache to avoid caching username/password when authenticating again
+        binding.webViewAuthentication.clearCache(true)
+        super.onDestroy()
     }
 
     private fun showLoading() {

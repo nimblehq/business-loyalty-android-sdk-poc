@@ -36,7 +36,7 @@ internal abstract class BaseSharedPreferences {
         sharedPreferences.execute { it.remove(key) }
     }
 
-    protected fun clearAll() {
+    internal fun clearAll() {
         sharedPreferences.execute { it.clear() }
     }
 }

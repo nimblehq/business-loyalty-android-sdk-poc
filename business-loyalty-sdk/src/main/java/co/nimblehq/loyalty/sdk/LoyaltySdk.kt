@@ -3,6 +3,7 @@ package co.nimblehq.loyalty.sdk
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import co.nimblehq.loyalty.sdk.model.AuthenticationState
 import co.nimblehq.loyalty.sdk.model.RedeemReward
 import co.nimblehq.loyalty.sdk.model.RedeemedReward
 import co.nimblehq.loyalty.sdk.model.Reward
@@ -100,11 +101,43 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
         }
     }
 
+    @DelicateCoroutinesApi
+    fun getAuthenticationState(onResponse: (Result<AuthenticationState>) -> Unit) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = try {
+                val result = authenticationRepository.getAuthenticationState()
+                Result.Success(result)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                Result.Error(exception)
+            }
+            withContext(Dispatchers.Main) {
+                onResponse(result)
+            }
+        }
+    }
+
     fun authenticate(activityContext: Context) {
         with(activityContext) {
             startActivity(
                 Intent(this, AuthenticationActivity::class.java)
             )
+        }
+    }
+
+    @DelicateCoroutinesApi
+    fun clearAuthenticateState(onResponse: (Result<Unit>) -> Unit) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = try {
+                val result = authenticationRepository.clearAuthenticateState()
+                Result.Success(result)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                Result.Error(exception)
+            }
+            withContext(Dispatchers.Main) {
+                onResponse(result)
+            }
         }
     }
 }
