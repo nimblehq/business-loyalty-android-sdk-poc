@@ -6,9 +6,10 @@
     <application>
         <activity
             android:name=".ui.authenticate.AuthenticationActivity"
-            android:theme="@style/LoyaltySdkTheme"
+            android:exported="true"
+            android:networkSecurityConfig="@xml/network_security_config"
             android:screenOrientation="portrait"
-            android:exported="true">
+            android:theme="@style/LoyaltySdkTheme">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" />
 
