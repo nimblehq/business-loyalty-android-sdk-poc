@@ -4,10 +4,7 @@ import android.graphics.Bitmap
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
-import android.webkit.WebResourceError
-import android.webkit.WebResourceRequest
-import android.webkit.WebView
-import android.webkit.WebViewClient
+import android.webkit.*
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import co.nimblehq.common.extensions.gone
@@ -102,8 +99,8 @@ internal class AuthenticationActivity : AppCompatActivity() {
     }
 
     override fun onDestroy() {
-        // Clear WebView cache to avoid caching username/password when authenticating again
-        binding.webViewAuthentication.clearCache(true)
+        // Clear Cookie on session to avoid caching username/password when authenticating again
+        CookieManager.getInstance().removeSessionCookies {}
         super.onDestroy()
     }
 
@@ -147,7 +144,6 @@ internal class AuthenticationActivity : AppCompatActivity() {
                 authPersistence.saveAccessToken(token.accessToken.orEmpty())
                 authPersistence.saveTokenType(token.tokenType.orEmpty())
             } catch (ex: Exception) {
-                Log.e(TAG, "[Authentication] >>> FAILED", ex)
                 Toast.makeText(applicationContext, ex.message, Toast.LENGTH_SHORT).show()
             }
             withContext(Dispatchers.Main) {
