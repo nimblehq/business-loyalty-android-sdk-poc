@@ -8,6 +8,7 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import co.nimblehq.common.extensions.gone
 import co.nimblehq.common.extensions.visible
@@ -136,14 +137,19 @@ internal class AuthenticationActivity : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 showLoading()
             }
-            val token = authenticationRepository.requestAccessToken(
-                clientId = LoyaltySdk.getInstance().clientId,
-                clientSecret = LoyaltySdk.getInstance().clientSecret,
-                code = code,
-                redirectUri = redirectUrl
-            )
-            authPersistence.saveAccessToken(token.accessToken.orEmpty())
-            authPersistence.saveTokenType(token.tokenType.orEmpty())
+            try {
+                val token = authenticationRepository.requestAccessToken(
+                    clientId = LoyaltySdk.getInstance().clientId,
+                    clientSecret = LoyaltySdk.getInstance().clientSecret,
+                    code = code,
+                    redirectUri = redirectUrl
+                )
+                authPersistence.saveAccessToken(token.accessToken.orEmpty())
+                authPersistence.saveTokenType(token.tokenType.orEmpty())
+            } catch (ex: Exception) {
+                Log.e(TAG, "[Authentication] >>> FAILED", ex)
+                Toast.makeText(applicationContext, ex.message, Toast.LENGTH_SHORT).show()
+            }
             withContext(Dispatchers.Main) {
                 hideLoading()
                 finish()
