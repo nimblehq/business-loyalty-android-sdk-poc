@@ -8,6 +8,7 @@ import android.webkit.WebResourceError
 import android.webkit.WebResourceRequest
 import android.webkit.WebView
 import android.webkit.WebViewClient
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import co.nimblehq.common.extensions.gone
 import co.nimblehq.common.extensions.visible
@@ -30,7 +31,7 @@ private const val SCOPE_READ = "read"
 
 private val TAG = AuthenticationActivity::class.simpleName
 
-class AuthenticationActivity : AppCompatActivity() {
+internal class AuthenticationActivity : AppCompatActivity() {
 
     private lateinit var binding: ActivityAuthenticationBinding
 
@@ -100,6 +101,12 @@ class AuthenticationActivity : AppCompatActivity() {
         }
     }
 
+    override fun onDestroy() {
+        // Clear WebView cache to avoid caching username/password when authenticating again
+        binding.webViewAuthentication.clearCache(true)
+        super.onDestroy()
+    }
+
     private fun showLoading() {
         binding.pbAuthentication.visible()
     }
@@ -130,14 +137,19 @@ class AuthenticationActivity : AppCompatActivity() {
             withContext(Dispatchers.Main) {
                 showLoading()
             }
-            val token = authenticationRepository.requestAccessToken(
-                clientId = LoyaltySdk.getInstance().clientId,
-                clientSecret = LoyaltySdk.getInstance().clientSecret,
-                code = code,
-                redirectUri = redirectUrl
-            )
-            authPersistence.saveAccessToken(token.accessToken.orEmpty())
-            authPersistence.saveTokenType(token.tokenType.orEmpty())
+            try {
+                val token = authenticationRepository.requestAccessToken(
+                    clientId = LoyaltySdk.getInstance().clientId,
+                    clientSecret = LoyaltySdk.getInstance().clientSecret,
+                    code = code,
+                    redirectUri = redirectUrl
+                )
+                authPersistence.saveAccessToken(token.accessToken.orEmpty())
+                authPersistence.saveTokenType(token.tokenType.orEmpty())
+            } catch (ex: Exception) {
+                Log.e(TAG, "[Authentication] >>> FAILED", ex)
+                Toast.makeText(applicationContext, ex.message, Toast.LENGTH_SHORT).show()
+            }
             withContext(Dispatchers.Main) {
                 hideLoading()
                 finish()

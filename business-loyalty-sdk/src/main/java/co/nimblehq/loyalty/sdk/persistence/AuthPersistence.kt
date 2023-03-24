@@ -5,6 +5,7 @@ interface AuthPersistence {
     fun saveTokenType(tokenType: String)
     fun getAccessToken(): String?
     fun getTokenType(): String?
+    fun clearAll()
 }
 
 internal class AuthPersistenceImpl constructor(
@@ -26,4 +27,7 @@ internal class AuthPersistenceImpl constructor(
         return sharedPrefs.get<String>(KEY_TOKEN_TYPE)
     }
 
+    override fun clearAll() {
+        sharedPrefs.clearAll()
+    }
 }

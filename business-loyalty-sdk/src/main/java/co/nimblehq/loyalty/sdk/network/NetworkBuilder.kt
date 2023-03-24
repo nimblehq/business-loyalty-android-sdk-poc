@@ -5,6 +5,7 @@ import co.nimblehq.loyalty.sdk.BuildConfig
 import co.nimblehq.loyalty.sdk.api.ApiService
 import co.nimblehq.loyalty.sdk.api.AuthenticationService
 import co.nimblehq.loyalty.sdk.api.interceptor.AuthorizationInterceptor
+import co.nimblehq.loyalty.sdk.persistence.AuthPersistence
 import co.nimblehq.loyalty.sdk.persistence.PersistenceProvider
 import co.nimblehq.loyalty.sdk.repository.AuthenticationRepository
 import co.nimblehq.loyalty.sdk.repository.AuthenticationRepositoryImpl
@@ -19,12 +20,17 @@ private const val CONNECTION_TIMEOUT_IN_SECOND = 30L
 private const val READ_TIMEOUT_IN_SECOND = 30L
 
 abstract class NetworkBuilder {
+    private val authPersistence: AuthPersistence by lazy {
+        PersistenceProvider.getAuthPersistence(
+            context
+        )
+    }
     private val apiService: ApiService by lazy { buildService() }
     private val authenticationService: AuthenticationService by lazy { buildAuthenticationService() }
 
     internal val rewardRepository: RewardRepository by lazy { RewardRepositoryImpl(apiService) }
     internal val authenticationRepository: AuthenticationRepository by lazy {
-        AuthenticationRepositoryImpl(authenticationService)
+        AuthenticationRepositoryImpl(authenticationService, authPersistence)
     }
 
     private lateinit var context: Context
@@ -77,9 +83,7 @@ abstract class NetworkBuilder {
         }
 
     private fun provideAuthorizationInterceptor() =
-        AuthorizationInterceptor(
-            PersistenceProvider.getAuthPersistence(context)
-        )
+        AuthorizationInterceptor(authPersistence)
 
     private fun provideRetrofitBuilder(): Retrofit.Builder {
         return Retrofit.Builder()

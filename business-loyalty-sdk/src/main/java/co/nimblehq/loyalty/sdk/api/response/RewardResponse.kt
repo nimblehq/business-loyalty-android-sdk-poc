@@ -47,6 +47,7 @@ fun RewardResponse.toModel() = Reward(
     conditions = conditions,
     instructions = instructions,
     terms = terms,
+    type = type,
     state = state,
     expiresOn = expiresOn,
     pointCost = pointCost,
