@@ -54,10 +54,10 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
     }
 
     @DelicateCoroutinesApi
-    fun getRewards(onResponse: (Result<List<Reward>>) -> Unit) {
+    fun getRewardList(onResponse: (Result<List<Reward>>) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             val result = try {
-                val result = rewardRepository.getReward()
+                val result = rewardRepository.getRewardList()
                 Result.Success(result)
             } catch (exception: Exception) {
                 exception.printStackTrace()
@@ -86,10 +86,10 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
     }
 
     @DelicateCoroutinesApi
-    fun getRedeemedReward(onResponse: (Result<List<RedeemedReward>>) -> Unit) {
+    fun getRedeemedRewardList(onResponse: (Result<List<RedeemedReward>>) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             val result = try {
-                val result = rewardRepository.getRedeemedReward()
+                val result = rewardRepository.getRedeemedRewardList()
                 Result.Success(result)
             } catch (exception: Exception) {
                 exception.printStackTrace()
@@ -126,7 +126,7 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
     }
 
     @DelicateCoroutinesApi
-    fun clearAuthenticateState(onResponse: (Result<Unit>) -> Unit) {
+    fun clearSession(onResponse: (Result<Unit>) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             val result = try {
                 val result = authenticationRepository.clearAuthenticateState()
