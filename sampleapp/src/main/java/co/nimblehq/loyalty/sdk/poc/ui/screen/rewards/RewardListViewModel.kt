@@ -23,8 +23,9 @@ class RewardListViewModel @Inject constructor(
             RewardListUiState.Loading
         )
 
-    private val _redeemedRewardState = MutableSharedFlow<RedeemRewardUiState>()
-    val redeemedRewardState: SharedFlow<RedeemRewardUiState> = _redeemedRewardState
+    private val _redeemedRewardState =
+        MutableStateFlow<RedeemRewardUiState>(RedeemRewardUiState.Init)
+    val redeemedRewardState: StateFlow<RedeemRewardUiState> = _redeemedRewardState
 
     fun redeemReward(rewardId: String) {
         viewModelScope.launch {

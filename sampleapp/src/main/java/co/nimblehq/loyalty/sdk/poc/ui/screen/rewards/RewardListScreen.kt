@@ -53,25 +53,26 @@ fun RewardListScreen(
         }
     }
 
-    val activity = LocalContext.current as Activity
-    when (redeemRewardUiState) {
-        is RedeemRewardUiState.Success -> {
-            Toast.makeText(activity, stringResource(R.string.redeem_reward_success), Toast.LENGTH_SHORT).show()
+    val context = LocalContext.current
+    LaunchedEffect(redeemRewardUiState) {
+        when (redeemRewardUiState) {
+            is RedeemRewardUiState.Success -> {
+                context.getString(R.string.redeem_reward_success)
+            }
+            is RedeemRewardUiState.Error -> {
+                (redeemRewardUiState as RedeemRewardUiState.Error).throwable.message
+            }
+            is RedeemRewardUiState.Processing -> {
+                context.getString(R.string.redeem_reward_processing)
+            }
+            else -> null
+        }?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
         }
-        is RedeemRewardUiState.Error -> {
-            Toast.makeText(
-                activity,
-                (redeemRewardUiState as RedeemRewardUiState.Error).throwable.message,
-                Toast.LENGTH_SHORT
-            ).show()
-        }
-        is RedeemRewardUiState.Processing -> {
-            Toast.makeText(activity, stringResource(R.string.redeem_reward_processing), Toast.LENGTH_SHORT).show()
-        }
-        else -> {}
     }
 
-    Scaffold(modifier = modifier.padding(vertical = 8.dp),
+    Scaffold(
+        modifier = modifier.padding(vertical = 8.dp),
         topBar = {
             TopAppBar(
                 title = {
