@@ -70,6 +70,22 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
     }
 
     @DelicateCoroutinesApi
+    fun getRewardDetail(rewardId: String, onResponse: (Result<Reward>) -> Unit) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = try {
+                val result = rewardRepository.getRewardDetail(rewardId)
+                Result.Success(result)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                Result.Error(exception)
+            }
+            withContext(Dispatchers.Main) {
+                onResponse(result)
+            }
+        }
+    }
+
+    @DelicateCoroutinesApi
     fun redeemReward(rewardId: String, onResponse: (Result<RedeemReward>) -> Unit) {
         GlobalScope.launch(Dispatchers.IO) {
             val result = try {

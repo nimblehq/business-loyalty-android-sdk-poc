@@ -10,6 +10,8 @@ import co.nimblehq.loyalty.sdk.model.Reward
 internal interface RewardRepository {
     suspend fun getRewardList(): List<Reward>
 
+    suspend fun getRewardDetail(rewardId: String): Reward
+
     suspend fun redeemReward(rewardId: String): RedeemReward
 
     suspend fun getRedeemedRewardList(): List<RedeemedReward>
@@ -21,6 +23,10 @@ internal class RewardRepositoryImpl(
 
     override suspend fun getRewardList(): List<Reward> {
         return apiService.getRewards().toModel().orEmpty()
+    }
+
+    override suspend fun getRewardDetail(rewardId: String): Reward {
+        return apiService.getRewardDetail(rewardId).toModel()
     }
 
     override suspend fun redeemReward(rewardId: String): RedeemReward {
