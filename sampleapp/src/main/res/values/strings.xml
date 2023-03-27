@@ -7,16 +7,26 @@
 
     <string name="main_sign_in">Sign In</string>
     <string name="main_sign_out">Sign Out</string>
-    <string name="main_redeem_reward">Redeem Reward: %d point(s)</string>
-    <string name="main_redeem_reward_count">Redeemed: %d time(s)</string>
+    <string name="main_redeem_reward">%d Point(s)</string>
+    <string name="main_redeem_reward_count">Redeemed %d time(s)</string>
     <string name="main_reward_expires_on">Expires on: %s</string>
+    <string name="main_reward_no_due_date">No due date</string>
+    <string name="main_reward_due_date">Until %s</string>
     <string name="main_reward_list">Reward List</string>
     <string name="main_reward_history">Reward History</string>
     <string name="main_clear_session">Clear Session</string>
 
     <string name="title_reward_list">Reward List</string>
     <string name="title_reward_history">Reward History</string>
+    <string name="title_reward_details">Reward Details</string>
 
     <string name="redeem_reward_success">Redeemed Reward Successfully</string>
     <string name="redeem_reward_processing">Processing…</string>
+
+    <string name="reward_details_terms">To redeem this reward:</string>
+    <string name="reward_details_terms_not_available">N/A</string>
+    <string name="reward_details_no_due_date">No due date</string>
+    <string name="reward_details_due_date">Until %s</string>
+    <string name="reward_details_point_cost">%d Point(s)</string>
+    <string name="reward_details_redeem">Redeem %d Point(s)</string>
 </resources>
