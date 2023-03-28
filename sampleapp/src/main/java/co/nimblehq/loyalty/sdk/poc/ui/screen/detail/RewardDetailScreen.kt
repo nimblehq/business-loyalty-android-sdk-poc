@@ -7,6 +7,8 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -17,7 +19,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
-import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -135,7 +136,6 @@ internal fun RewardDetailInformation(
             .fillMaxSize()
             .verticalScroll(rememberScrollState())
     ) {
-
         Box(modifier = Modifier.fillMaxWidth()) {
             RewardDetailImage(
                 imageUrl = reward.imageUrls?.firstOrNull().orEmpty(),
@@ -145,11 +145,11 @@ internal fun RewardDetailInformation(
             )
 
             Image(
-                painter = painterResource(id = R.drawable.ic_back),
+                imageVector = Icons.Filled.ArrowBack,
                 contentDescription = null,
                 modifier = Modifier
                     .align(Alignment.TopStart)
-                    .padding(start = 16.dp, top = 16.dp)
+                    .padding(horizontal = 16.dp, vertical = 16.dp)
                     .clickable {
                         onNavigateBack.invoke()
                     },

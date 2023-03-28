@@ -11,7 +11,7 @@ data class Reward(
     val instructions: String?,
     val terms: String?,
     val type: String?,
-    val state: String?,
+    val status: String?,
     val expiresOn: Date?,
     val pointCost: Int?,
     val redeemedRewardsCount: Int?,
