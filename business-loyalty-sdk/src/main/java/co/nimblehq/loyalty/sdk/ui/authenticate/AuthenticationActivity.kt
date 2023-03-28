@@ -5,7 +5,6 @@ import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.webkit.*
-import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import co.nimblehq.common.extensions.gone
 import co.nimblehq.common.extensions.visible
@@ -13,6 +12,7 @@ import co.nimblehq.loyalty.sdk.BuildConfig
 import co.nimblehq.loyalty.sdk.LoyaltySdk
 import co.nimblehq.loyalty.sdk.R
 import co.nimblehq.loyalty.sdk.databinding.ActivityAuthenticationBinding
+import co.nimblehq.loyalty.sdk.exception.AuthenticationException
 import co.nimblehq.loyalty.sdk.persistence.AuthPersistence
 import co.nimblehq.loyalty.sdk.persistence.PersistenceProvider
 import co.nimblehq.loyalty.sdk.repository.AuthenticationRepository
@@ -51,9 +51,7 @@ internal class AuthenticationActivity : AppCompatActivity() {
                         // Parse the redirect URL query parameters to get the code
                         it.getQueryParameter(RESPONSE_TYPE_CODE)?.let { code ->
                             requestToken(getRedirectUrl(), code)
-                        } ?: run {
-                            // TODO Users cancelled the login flow
-                        }
+                        } ?: throw AuthenticationException.UnableToAuthenticate
                     }
                 }
                 return super.shouldOverrideUrlLoading(view, request)
@@ -113,20 +111,30 @@ internal class AuthenticationActivity : AppCompatActivity() {
     }
 
     private fun getLoadingUrl(): String {
-        val uri = Uri.parse("${BuildConfig.AUTHENTICATION_API_URL}authorize")
-            .buildUpon()
-            .appendQueryParameter(CLIENT_ID, LoyaltySdk.getInstance().clientId)
-            .appendQueryParameter(REDIRECT_URI, getRedirectUrl())
-            .appendQueryParameter(RESPONSE_TYPE, RESPONSE_TYPE_CODE)
-            .appendQueryParameter(SCOPE, SCOPE_READ)
-            .build()
-        return URL(uri.toString()).toString().also {
-            Log.d(TAG, "Loading url >>> $it")
+        try {
+            val uri = Uri.parse("${BuildConfig.AUTHENTICATION_API_URL}authorize")
+                .buildUpon()
+                .appendQueryParameter(CLIENT_ID, LoyaltySdk.getInstance().clientId)
+                .appendQueryParameter(REDIRECT_URI, getRedirectUrl())
+                .appendQueryParameter(RESPONSE_TYPE, RESPONSE_TYPE_CODE)
+                .appendQueryParameter(SCOPE, SCOPE_READ)
+                .build()
+            return URL(uri.toString()).toString().also {
+                Log.d(TAG, "Loading url >>> $it")
+            }
+        } catch (ex: Exception) {
+            throw AuthenticationException.UnableToInitSignInUrl
         }
     }
 
-    private fun getRedirectUrl() = "${getString(R.string.login_scheme)}://" +
-            "${getString(R.string.login_host)}${getString(R.string.login_path)}"
+    private fun getRedirectUrl(): String {
+        try {
+            return "${getString(R.string.login_scheme)}://" +
+                    "${getString(R.string.login_host)}${getString(R.string.login_path)}"
+        } catch (ex: Exception) {
+            throw AuthenticationException.UnableToInitCallbackUrl
+        }
+    }
 
     @OptIn(DelicateCoroutinesApi::class)
     private fun requestToken(redirectUrl: String, code: String) {
@@ -144,7 +152,7 @@ internal class AuthenticationActivity : AppCompatActivity() {
                 authPersistence.saveAccessToken(token.accessToken.orEmpty())
                 authPersistence.saveTokenType(token.tokenType.orEmpty())
             } catch (ex: Exception) {
-                Toast.makeText(applicationContext, ex.message, Toast.LENGTH_SHORT).show()
+                throw AuthenticationException.UnableToAuthenticate
             }
             withContext(Dispatchers.Main) {
                 hideLoading()

@@ -3,6 +3,8 @@ package co.nimblehq.loyalty.sdk
 import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
+import co.nimblehq.loyalty.sdk.api.mapError
+import co.nimblehq.loyalty.sdk.exception.InitializationException
 import co.nimblehq.loyalty.sdk.model.AuthenticationState
 import co.nimblehq.loyalty.sdk.model.RedeemReward
 import co.nimblehq.loyalty.sdk.model.RedeemedReward
@@ -34,11 +36,22 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
         fun withClientSecret(clientSecret: String) = apply { this.clientSecret = clientSecret }
         fun init() {
             instance = LoyaltySdk().also { sdk ->
-                context?.let{
+                context?.let {
                     sdk.setContext(it)
-                } ?: throw RuntimeException("Context must not be null")
-                sdk.setClientId(clientId)
-                sdk.setClientSecret(clientSecret)
+                } ?: throw InitializationException.InvalidContext
+
+                if (clientId.isEmpty()) {
+                    throw InitializationException.InvalidClientId
+                } else {
+                    sdk.setClientId(clientId)
+                }
+
+                if (clientSecret.isEmpty()) {
+                    throw InitializationException.InvalidClientSecret
+                } else {
+                    sdk.setClientSecret(clientSecret)
+                }
+
                 sdk.setDebugMode(isDebugMode)
             }
         }
@@ -46,7 +59,7 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
         fun getInstance(): LoyaltySdk {
             synchronized(this) {
                 if (!::instance.isInitialized) {
-                    throw RuntimeException("LoyaltySdk has not been initialized. Initialize new instance by using LoyaltySdk.Builder")
+                    throw InitializationException.LateInitialization
                 }
                 return instance
             }
@@ -61,7 +74,7 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
                 Result.Success(result)
             } catch (exception: Exception) {
                 exception.printStackTrace()
-                Result.Error(exception)
+                Result.Error(exception.mapError())
             }
             withContext(Dispatchers.Main) {
                 onResponse(result)
@@ -77,7 +90,7 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
                 Result.Success(result)
             } catch (exception: Exception) {
                 exception.printStackTrace()
-                Result.Error(exception)
+                Result.Error(exception.mapError())
             }
             withContext(Dispatchers.Main) {
                 onResponse(result)
@@ -93,7 +106,7 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
                 Result.Success(result)
             } catch (exception: Exception) {
                 exception.printStackTrace()
-                Result.Error(exception)
+                Result.Error(exception.mapError())
             }
             withContext(Dispatchers.Main) {
                 onResponse(result)
@@ -109,7 +122,7 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
                 Result.Success(result)
             } catch (exception: Exception) {
                 exception.printStackTrace()
-                Result.Error(exception)
+                Result.Error(exception.mapError())
             }
             withContext(Dispatchers.Main) {
                 onResponse(result)
@@ -125,7 +138,7 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
                 Result.Success(result)
             } catch (exception: Exception) {
                 exception.printStackTrace()
-                Result.Error(exception)
+                Result.Error(exception.mapError())
             }
             withContext(Dispatchers.Main) {
                 onResponse(result)
@@ -149,7 +162,7 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
                 Result.Success(result)
             } catch (exception: Exception) {
                 exception.printStackTrace()
-                Result.Error(exception)
+                Result.Error(exception.mapError())
             }
             withContext(Dispatchers.Main) {
                 onResponse(result)
