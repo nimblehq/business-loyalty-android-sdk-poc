@@ -8,6 +8,7 @@ sealed class AuthenticationException(cause: String) : LoyaltySdkException(cause)
     object UnableToAuthenticate :
         AuthenticationException("An error occurred when attempting to sign in")
 
+    // TODO Remove this
     object UnauthenticatedException :
         AuthenticationException("Unauthorized access. Please authenticate.")
 }

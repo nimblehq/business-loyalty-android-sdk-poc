@@ -20,9 +20,11 @@ Open `sampleapp` folder and build the project
 |:-----|---------|
 |  <br><br> Home screen that demonstrate features from SDK <br><br> • Sign-in<br>• Reward List<br>• Reward History<br><br><br> | <img src="readme/home.png" width="240" alt="Home"> |
 |  |  |
-|  <br><br> Reward List screen that show reward information. <br><br> • Image<br>• Title & description<br>• Reward type<br>• Expiration<br>• Reward redemption<br><br> | <img src="readme/reward_list.png" width="240" alt="RewardList"> |
+|  <br><br> Reward List screen that show reward information. <br><br> • Image<br>• Title & description<br>• Expiration<br>• Reward redemption<br><br><br> | <img src="readme/reward_list.png" width="240" alt="RewardList"> |
 |  |  |
-|  <br><br> Reward History screen that show redeemed reward information. <br><br> • Image<br>• Title & description<br>• Reward type<br>• Expiration<br>• Redeemed times<br><br> | <img src="readme/reward_history.png" width="240" alt="RewardHistory"> |
+|  <br><br> Reward Details screen that show reward information. <br><br> • Image<br>• Title & description<br>• Expiration<br>• Reward redemption<br>• Terms<br><br><br> | <img src="readme/reward_details.png" width="240" alt="RewardDetails"> |
+|  |  |
+|  <br><br> Reward History screen that show redeemed reward information. <br><br> • Image<br>• Title<br>• Expiration<br><br><br> | <img src="readme/reward_history.png" width="240" alt="RewardHistory"> |
 
 ## Loyalty SDK
 
@@ -140,6 +142,20 @@ Retrieves the list of available rewards for the authenticated user.
     }
 ```
 
+### Get Reward details
+
+Retrieves the reward details for the authenticated user.
+
+```kotlin
+    LoyaltySdk.getInstance().getRewardDetail(rewardId) { result ->
+        when (result) {
+            is Result.Success -> // result.data
+            is Result.Error -> // result.exception
+            else -> {}
+        }
+    }
+```
+
 ### Redeem a Reward
 
 Redeems a reward with the given reward's code for the authenticated user.
@@ -167,6 +183,57 @@ Retrieves the reward history for the authenticated user.
         }
     }
 ```
+
+### Exceptions
+
+<table>
+   <tr>
+      <th colspan="3">LoyaltySdkException</th>
+   </tr>
+   <tr>
+      <th>Category</th>
+      <th>Exception</th>
+      <th>Description</th>
+   </tr>
+   <tr>
+      <td rowspan="3">AuthenticationException</td>
+      <td>UnableToInitSignInUrl</td>
+      <td>Could not create the sign in URL</td>
+   </tr>
+   <tr>
+      <td>UnableToInitCallbackUrl</td>
+      <td>Could not create the callback URL</td>
+   </tr>
+   <tr>
+      <td>UnableToAuthenticate</td>
+      <td>An error occurred when attempting to sign in</td>
+   </tr>
+   <tr>
+      <td rowspan="4">InitializationException</td>
+      <td>InvalidContext</td>
+      <td>Context must not be null</td>
+   </tr>
+   <tr>
+      <td>InvalidClientId</td>
+      <td>CLIENT_ID must not be null or empty</td>
+   </tr>
+   <tr>
+      <td>InvalidClientSecret</td>
+      <td>CLIENT_SECRET must not be null or empty</td>
+   </tr>
+   <tr>
+      <td>LateInitialization</td>
+      <td>LoyaltySdk has not been initialized. Initialize new instance by using LoyaltySdk.Builder</td>
+   </tr>
+   <td rowspan="2">NetworkException</td>
+   <td>NoConnectivity</td>
+   <td>No connectivity</td>
+   </tr>
+   <tr>
+      <td>ApiResponse</td>
+      <td>Error message from API response</td>
+   </tr>
+</table>
 
 ## License
 
