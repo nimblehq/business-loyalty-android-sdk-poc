@@ -2,6 +2,7 @@ package co.nimblehq.loyalty.sdk.poc.ui.screen.rewards
 
 import android.app.Activity
 import android.widget.Toast
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
@@ -29,6 +30,7 @@ import co.nimblehq.loyalty.sdk.poc.ui.composable.RewardInfoChip
 @Composable
 fun RewardListScreen(
     onNavigateBack: () -> Unit,
+    onNavigateRewardDetail: (String) -> Unit,
     modifier: Modifier,
     viewModel: RewardListViewModel = hiltViewModel(),
 ) {
@@ -90,6 +92,9 @@ fun RewardListScreen(
         }) { paddingValues ->
         RewardListContent(
             uiState = uiState,
+            onRewardItemClick = { reward ->
+                onNavigateRewardDetail.invoke(reward.id.orEmpty())
+            },
             onRedeemReward = { reward ->
                 viewModel.redeemReward(reward.id.orEmpty())
             },
@@ -102,6 +107,7 @@ fun RewardListScreen(
 @Composable
 internal fun RewardListContent(
     uiState: RewardListUiState,
+    onRewardItemClick: (Reward) -> Unit,
     onRedeemReward: (Reward) -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -114,7 +120,11 @@ internal fun RewardListContent(
             is RewardListUiState.Success -> {
                 LazyColumn(modifier = modifier.fillMaxSize()) {
                     items(uiState.data) { reward ->
-                        RewardItem(reward = reward, onRedeemReward = onRedeemReward)
+                        RewardItem(
+                            reward = reward,
+                            onRewardItemClick = onRewardItemClick,
+                            onRedeemReward = onRedeemReward
+                        )
                     }
                 }
             }
@@ -133,11 +143,18 @@ internal fun RewardListContent(
 }
 
 @Composable
-fun RewardItem(reward: Reward, onRedeemReward: (Reward) -> Unit) {
+fun RewardItem(
+    reward: Reward,
+    onRewardItemClick: (Reward) -> Unit,
+    onRedeemReward: (Reward) -> Unit
+) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable {
+                onRewardItemClick.invoke(reward)
+            },
     ) {
         Column {
             Row(modifier = Modifier.padding(8.dp)) {

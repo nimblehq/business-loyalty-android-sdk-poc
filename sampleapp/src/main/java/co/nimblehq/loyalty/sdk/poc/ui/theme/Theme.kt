@@ -6,14 +6,19 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.SideEffect
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.ViewCompat
 
 // Use Default color schemes
-private val DarkColorScheme = darkColorScheme()
-private val LightColorScheme = lightColorScheme()
+private val DarkColorScheme = darkColorScheme(
+    primary = Color(0xFF5A67D8)
+)
+private val LightColorScheme = lightColorScheme(
+    primary = Color(0xFF5A67D8)
+)
 
 @Composable
 fun AppTheme(

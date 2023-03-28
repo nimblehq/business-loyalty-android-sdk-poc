@@ -18,16 +18,18 @@ interface SampleAppRepository {
     val rewards: Flow<List<Reward>>
     val redeemedRewards: Flow<List<RedeemedReward>>
     val isAuthenticated: Flow<Boolean>
+    fun getRewardDetail(rewardId: String): Flow<Reward>
     fun redeemReward(rewardId: String): Flow<RedeemReward>
     fun clearSession(): Flow<Unit>
 }
 
+@OptIn(DelicateCoroutinesApi::class)
 class SampleAppRepositoryImpl @Inject constructor() : SampleAppRepository {
 
     override val rewards: Flow<List<Reward>> = flow {
-            val result = getRewardListFromSdk()
-            emit(result)
-        }
+        val result = getRewardListFromSdk()
+        emit(result)
+    }
 
     override val redeemedRewards: Flow<List<RedeemedReward>>
         get() = flow {
@@ -41,17 +43,21 @@ class SampleAppRepositoryImpl @Inject constructor() : SampleAppRepository {
             emit(result == AuthenticationState.Authenticated)
         }
 
+    override fun getRewardDetail(rewardId: String): Flow<Reward> = flow {
+        val result = getRewardDetailFromSdk(rewardId)
+        emit(result)
+    }
+
     override fun redeemReward(rewardId: String): Flow<RedeemReward> = flow {
         val result = redeemRewardByIdFromSdk(rewardId)
         emit(result)
     }
 
     override fun clearSession(): Flow<Unit> = flow {
-            val result = clearSessionStateFromSdk()
-            emit(result)
-        }
+        val result = clearSessionStateFromSdk()
+        emit(result)
+    }
 
-    @OptIn(DelicateCoroutinesApi::class)
     private suspend fun getRewardListFromSdk() = suspendCoroutine { continuation ->
         LoyaltySdk.getInstance().getRewardList { result ->
             when (result) {
@@ -62,7 +68,6 @@ class SampleAppRepositoryImpl @Inject constructor() : SampleAppRepository {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     private suspend fun getRedeemedRewardListFromSdk() = suspendCoroutine { continuation ->
         LoyaltySdk.getInstance().getRedeemedRewardList { result ->
             when (result) {
@@ -73,7 +78,6 @@ class SampleAppRepositoryImpl @Inject constructor() : SampleAppRepository {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
     private suspend fun getAuthenticationStateFromSdk() = suspendCoroutine { continuation ->
         LoyaltySdk.getInstance().getAuthenticationState { result ->
             when (result) {
@@ -84,18 +88,28 @@ class SampleAppRepositoryImpl @Inject constructor() : SampleAppRepository {
         }
     }
 
-    @OptIn(DelicateCoroutinesApi::class)
-    private suspend fun redeemRewardByIdFromSdk(rewardId: String) = suspendCoroutine { continuation ->
-        LoyaltySdk.getInstance().redeemReward(rewardId) { result ->
-            when (result) {
-                is Result.Success -> continuation.resume(result.data)
-                is Result.Error -> continuation.resumeWithException(result.exception)
-                else -> {}
+    private suspend fun getRewardDetailFromSdk(rewardId: String) =
+        suspendCoroutine { continuation ->
+            LoyaltySdk.getInstance().getRewardDetail(rewardId) { result ->
+                when (result) {
+                    is Result.Success -> continuation.resume(result.data)
+                    is Result.Error -> continuation.resumeWithException(result.exception)
+                    else -> {}
+                }
             }
         }
-    }
 
-    @OptIn(DelicateCoroutinesApi::class)
+    private suspend fun redeemRewardByIdFromSdk(rewardId: String) =
+        suspendCoroutine { continuation ->
+            LoyaltySdk.getInstance().redeemReward(rewardId) { result ->
+                when (result) {
+                    is Result.Success -> continuation.resume(result.data)
+                    is Result.Error -> continuation.resumeWithException(result.exception)
+                    else -> {}
+                }
+            }
+        }
+
     private suspend fun clearSessionStateFromSdk() = suspendCoroutine { continuation ->
         LoyaltySdk.getInstance().clearSession { result ->
             when (result) {
