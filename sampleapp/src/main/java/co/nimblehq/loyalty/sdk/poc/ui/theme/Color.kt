@@ -11,3 +11,7 @@ val PurpleGrey40 = Color(0xFF625b71)
 val Pink40 = Color(0xFF7D5260)
 
 val Indigo = Color(0xFF303F9F)
+
+val White = Color(0xFFFFFFFF)
+val LightGrey = Color(0xFFEDF2F7)
+val Blue = Color(0xFF5A67D8)
