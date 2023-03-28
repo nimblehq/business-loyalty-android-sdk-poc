@@ -7,9 +7,9 @@ data class RedeemedReward(
     val organizationId: String?,
     val customerId: String?,
     val rewardId: String?,
-    val state: String?,
+    val status: String?,
     val pointCost: Int?,
-    val images: String?,
+    val imageUrls: List<String>?,
     val reward: Reward?,
 ) {
     data class Reward(
@@ -22,7 +22,7 @@ data class RedeemedReward(
         val images: Images?,
         val terms: String?,
         val type: String?,
-        val state: String?,
+        val status: String?,
         val expiresOn: Date?,
         val pointCost: Int?,
         val redeemedRewardsCount: Int?,

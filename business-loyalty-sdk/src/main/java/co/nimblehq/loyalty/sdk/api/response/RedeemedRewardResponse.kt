@@ -13,12 +13,12 @@ data class RedeemedRewardResponse(
     val customerId: String?,
     @Json(name = "reward_id")
     val rewardId: String?,
-    @Json(name = "state")
-    val state: String?,
+    @Json(name = "status")
+    val status: String?,
     @Json(name = "point_cost")
     val pointCost: Int?,
-    @Json(name = "images")
-    val images: String?,
+    @Json(name = "image_urls")
+    val imageUrls: List<String>?,
     @Json(name = "created_at")
     val createdAt: Date?,
     @Json(name = "updated_at")
@@ -45,8 +45,8 @@ data class RedeemedRewardResponse(
         val terms: String?,
         @Json(name = "type")
         val type: String?,
-        @Json(name = "state")
-        val state: String?,
+        @Json(name = "status")
+        val status: String?,
         @Json(name = "expires_on")
         val expiresOn: Date?,
         @Json(name = "point_cost")
@@ -78,9 +78,9 @@ fun RedeemedRewardResponse.toModel() = RedeemedReward(
     organizationId = organizationId,
     customerId = customerId,
     rewardId = rewardId,
-    state = state,
+    status = status,
     pointCost = pointCost ?: 0,
-    images = images,
+    imageUrls = imageUrls,
     reward = reward.toModel()
 )
 
@@ -94,7 +94,7 @@ fun RedeemedRewardResponse.RewardResponse.toModel() = RedeemedReward.Reward(
     images = images?.toModel(),
     terms = terms,
     type = type,
-    state = state,
+    status = status,
     expiresOn = expiresOn,
     pointCost = pointCost,
     redeemedRewardsCount = redeemedRewardsCount,
