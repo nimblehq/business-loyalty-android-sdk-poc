@@ -2,18 +2,20 @@ package co.nimblehq.loyalty.sdk.poc.ui.screen.home
 
 import android.app.Activity
 import android.widget.Toast
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.layout.*
-import androidx.compose.material3.Button
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
@@ -76,8 +78,26 @@ internal fun HomeScreenContent(
                 Column(
                     modifier = modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.Center,
-                    horizontalAlignment = Alignment.CenterHorizontally
+                    horizontalAlignment = Alignment.CenterHorizontally,
                 ) {
+                    Image(
+                        painter = painterResource(id = R.drawable.ic_nimble_logo),
+                        contentDescription = null,
+                        modifier = Modifier.size(width = 82.dp, height = 96.dp)
+                    )
+
+                    Spacer(modifier = Modifier.padding(vertical = 16.dp))
+
+                    Text(
+                        text = stringResource(R.string.main_title),
+                        style = MaterialTheme.typography.headlineMedium,
+                        textAlign = TextAlign.Center,
+                        modifier = Modifier.padding(horizontal = 16.dp)
+                    )
+
+                    Spacer(modifier = Modifier.padding(vertical = 24.dp))
+
+
                     // Sign In / Sign Out
                     Button(
                         modifier = Modifier
@@ -91,6 +111,11 @@ internal fun HomeScreenContent(
                             }
                         }
                     ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_sign_in),
+                            contentDescription = null,
+                            tint = Color.White
+                        )
                         val text = if (isAuthenticated) {
                             stringResource(id = R.string.main_sign_out)
                         } else {
@@ -109,6 +134,11 @@ internal fun HomeScreenContent(
                             onNavigateToRewardList.invoke()
                         }
                     ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_rewards),
+                            contentDescription = null,
+                            tint = Color.White
+                        )
                         Text(stringResource(id = R.string.main_reward_list))
                     }
 
@@ -122,6 +152,11 @@ internal fun HomeScreenContent(
                             onNavigateToRewardHistory.invoke()
                         }
                     ) {
+                        Icon(
+                            painter = painterResource(id = R.drawable.ic_history),
+                            contentDescription = null,
+                            tint = Color.White
+                        )
                         Text(stringResource(id = R.string.main_reward_history))
                     }
                 }

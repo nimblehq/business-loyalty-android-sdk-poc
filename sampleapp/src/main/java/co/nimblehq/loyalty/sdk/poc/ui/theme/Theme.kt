@@ -14,10 +14,12 @@ import androidx.core.view.ViewCompat
 
 // Use Default color schemes
 private val DarkColorScheme = darkColorScheme(
-    primary = Color(0xFF5A67D8)
+    primary = Color(0xFF5A67D8),
+    surfaceVariant = Color(0xFFFFFFFF),
 )
 private val LightColorScheme = lightColorScheme(
-    primary = Color(0xFF5A67D8)
+    primary = Color(0xFF5A67D8),
+    surfaceVariant = Color(0xFFFFFFFF),
 )
 
 @Composable

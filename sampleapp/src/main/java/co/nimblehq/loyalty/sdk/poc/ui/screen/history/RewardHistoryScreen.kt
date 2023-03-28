@@ -2,9 +2,14 @@ package co.nimblehq.loyalty.sdk.poc.ui.screen.history
 
 import android.app.Activity
 import android.widget.Toast
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.border
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
 import androidx.compose.material3.*
@@ -13,6 +18,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.stringResource
@@ -25,7 +31,6 @@ import co.nimblehq.loyalty.sdk.model.RedeemedReward
 import co.nimblehq.loyalty.sdk.poc.R
 import co.nimblehq.loyalty.sdk.poc.extension.toFormattedString
 import co.nimblehq.loyalty.sdk.poc.ui.composable.RewardImage
-import co.nimblehq.loyalty.sdk.poc.ui.composable.RewardInfoChip
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
@@ -61,10 +66,17 @@ fun RewardHistoryScreen(
                 colors = TopAppBarDefaults.smallTopAppBarColors()
             )
         }) { paddingValues ->
-        RewardHistoryContent(
-            uiState = uiState,
-            modifier = modifier.padding(paddingValues)
-        )
+        Column(modifier = modifier.padding(paddingValues)) {
+            RewardHistoryContent(
+                uiState = uiState,
+//                onRewardItemClick = { reward ->
+//                    onNavigateRewardDetail.invoke(reward.id.orEmpty())
+//                },
+//                onRedeemReward = { reward ->
+//                    viewModel.redeemReward(reward.id.orEmpty())
+//                },
+            )
+        }
     }
 }
 
@@ -80,9 +92,16 @@ internal fun RewardHistoryContent(
     ) {
         when (uiState) {
             is RewardHistoryUiState.Success -> {
-                LazyColumn(modifier = modifier.fillMaxSize()) {
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    verticalArrangement = Arrangement.spacedBy(8.dp),
+                    horizontalArrangement = Arrangement.spacedBy(8.dp),
+                    modifier = modifier
+                        .fillMaxSize()
+                        .padding(horizontal = 8.dp)
+                ) {
                     items(uiState.data) { reward ->
-                        RedeemedRewardItem(redeemedReward = reward)
+                        RedeemedRewardItem(redeemedReward = reward, onRewardItemClick = {})
                     }
                 }
             }
@@ -100,62 +119,53 @@ internal fun RewardHistoryContent(
     }
 }
 
+
 @Composable
-fun RedeemedRewardItem(redeemedReward: RedeemedReward) {
+fun RedeemedRewardItem(
+    redeemedReward: RedeemedReward,
+    onRewardItemClick: (RedeemedReward) -> Unit
+) {
     Card(
         modifier = Modifier
-            .fillMaxWidth()
-            .padding(8.dp),
+            .fillMaxSize()
+            .border(
+                border = BorderStroke(width = 1.dp, Color.LightGray),
+                shape = RoundedCornerShape(8.dp)
+            )
+            .clickable { onRewardItemClick.invoke(redeemedReward) },
     ) {
         Column {
-            Row(modifier = Modifier.padding(8.dp)) {
-                RewardImage(
-                    imageUrl = redeemedReward.images.orEmpty(),
-                )
-                Column(
-                    modifier = Modifier
-                        .fillMaxWidth()
-                        .padding(horizontal = 8.dp)
-                ) {
-                    Text(
-                        text = redeemedReward.reward?.name.orEmpty(),
-                        style = MaterialTheme.typography.titleSmall,
-                        modifier = Modifier.padding(horizontal = 4.dp)
-                    )
-                    Text(
-                        text = redeemedReward.reward?.description.orEmpty(),
-                        style = MaterialTheme.typography.bodySmall,
-                        modifier = Modifier.padding(horizontal = 4.dp),
-                        maxLines = 3,
-                        overflow = TextOverflow.Ellipsis
-                    )
-                }
-            }
-            Row(modifier = Modifier.padding(8.dp)) {
-                RewardInfoChip(
-                    isActive = "active" == redeemedReward.reward?.state,
-                    text = redeemedReward.reward?.type.orEmpty(),
-                    modifier = Modifier.width(96.dp)
-                )
-
-                RewardInfoChip(
-                    isActive = true,
-                    text = stringResource(
-                        R.string.main_reward_expires_on,
-                        redeemedReward.reward?.expiresOn?.toFormattedString().orEmpty()
-                    ),
-                    modifier = Modifier.padding(horizontal = 8.dp)
-                )
-            }
-
-            RewardInfoChip(
-                isActive = true,
-                text = stringResource(
-                    R.string.main_redeem_reward_count,
-                    redeemedReward.reward?.redeemedRewardsCount ?: 0
-                ),
-                modifier = Modifier.padding(horizontal = 8.dp, vertical = 8.dp)
+            RewardImage(
+                imageUrl = redeemedReward.images.orEmpty(),
             )
+            Column(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                verticalArrangement = Arrangement.Top
+            ) {
+                Text(
+                    text = redeemedReward.reward?.name.orEmpty(),
+                    style = MaterialTheme.typography.titleSmall,
+                )
+                Text(
+                    text = redeemedReward.reward?.description.orEmpty(),
+                    style = MaterialTheme.typography.bodySmall,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                    modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)
+                )
+
+                val expiresOn = redeemedReward.reward?.expiresOn?.toFormattedString()
+                Text(
+                    text = if (expiresOn.isNullOrEmpty()) {
+                        stringResource(R.string.reward_details_no_due_date)
+                    } else {
+                        stringResource(R.string.reward_details_due_date, expiresOn)
+                    },
+                    style = MaterialTheme.typography.titleSmall,
+                )
+            }
         }
     }
 }

@@ -15,6 +15,7 @@
     <string name="main_reward_list">Reward List</string>
     <string name="main_reward_history">Reward History</string>
     <string name="main_clear_session">Clear Session</string>
+    <string name="main_title">Welcome to Loyalty SDK\nSample app</string>
 
     <string name="title_reward_list">Reward List</string>
     <string name="title_reward_history">Reward History</string>
