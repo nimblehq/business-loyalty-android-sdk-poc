@@ -1,9 +1,11 @@
 package co.nimblehq.loyalty.sdk.api
 
 import co.nimblehq.loyalty.sdk.api.response.ErrorResponse
+import co.nimblehq.loyalty.sdk.exception.AuthenticationException
 import co.nimblehq.loyalty.sdk.exception.NetworkException
 import co.nimblehq.loyalty.sdk.network.MoshiBuilderProvider
 import com.squareup.moshi.JsonDataException
+import okhttp3.internal.http.HTTP_UNAUTHORIZED
 import retrofit2.HttpException
 import retrofit2.Response
 import java.io.IOException
@@ -15,8 +17,12 @@ internal fun Exception.mapError(): Exception {
         is UnknownHostException,
         is InterruptedIOException -> NetworkException.NoConnectivity
         is HttpException -> {
-            val errorResponse = parseErrorResponse(response())
-            NetworkException.ApiResponse(errorResponse?.error ?: message())
+            if (this.code() == HTTP_UNAUTHORIZED) {
+                AuthenticationException.UnauthenticatedException
+            } else {
+                val errorResponse = parseErrorResponse(response())
+                NetworkException.ApiResponse(errorResponse?.error ?: message())
+            }
         }
         else -> this
     }
