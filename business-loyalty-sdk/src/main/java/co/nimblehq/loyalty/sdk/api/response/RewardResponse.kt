@@ -1,0 +1,56 @@
+package co.nimblehq.loyalty.sdk.api.response
+
+import co.nimblehq.loyalty.sdk.model.Reward
+import com.squareup.moshi.Json
+import java.util.*
+
+data class RewardResponse(
+    @Json(name = "id")
+    val id: String? = null,
+    @Json(name = "organization_id")
+    val organizationId: String? = null,
+    @Json(name = "name")
+    val name: String? = null,
+    @Json(name = "description")
+    val description: String? = null,
+    @Json(name = "conditions")
+    val conditions: String? = null,
+    @Json(name = "instructions")
+    val instructions: String? = null,
+    @Json(name = "terms")
+    val terms: String? = null,
+    @Json(name = "type")
+    val type: String? = null,
+    @Json(name = "status")
+    val status: String? = null,
+    @Json(name = "expires_on")
+    val expiresOn: Date? = null,
+    @Json(name = "point_cost")
+    val pointCost: Int? = null,
+    @Json(name = "deleted_at")
+    val deletedAt: Date? = null,
+    @Json(name = "created_at")
+    val createdAt: Date? = null,
+    @Json(name = "updated_at")
+    val updatedAt: Date? = null,
+    @Json(name = "redeemed_rewards_count")
+    val redeemedRewardsCount: Int? = null,
+    @Json(name = "image_urls")
+    val imageUrls: List<String>? = null,
+)
+
+fun RewardResponse.toModel() = Reward(
+    id = id,
+    organizationId = organizationId,
+    name = name,
+    description = description,
+    conditions = conditions,
+    instructions = instructions,
+    terms = terms,
+    type = type,
+    status = status,
+    expiresOn = expiresOn,
+    pointCost = pointCost,
+    redeemedRewardsCount = redeemedRewardsCount,
+    imageUrls = imageUrls,
+)
