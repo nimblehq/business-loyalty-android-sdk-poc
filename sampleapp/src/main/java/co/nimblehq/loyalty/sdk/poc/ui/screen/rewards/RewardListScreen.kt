@@ -33,8 +33,8 @@ import co.nimblehq.loyalty.sdk.poc.ui.composable.RewardImage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RewardListScreen(
-    onNavigateBack: () -> Unit,
     onNavigateRewardDetail: (String) -> Unit,
+    onNavigateBack: () -> Unit,
     modifier: Modifier,
     viewModel: RewardListViewModel = hiltViewModel(),
 ) {

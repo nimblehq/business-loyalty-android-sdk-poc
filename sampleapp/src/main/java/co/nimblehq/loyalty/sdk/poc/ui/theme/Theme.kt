@@ -16,10 +16,12 @@ import androidx.core.view.ViewCompat
 private val DarkColorScheme = darkColorScheme(
     primary = Color(0xFF5A67D8),
     surfaceVariant = Color(0xFFFFFFFF),
+    outlineVariant = Color(0xFFEDF2F7)
 )
 private val LightColorScheme = lightColorScheme(
     primary = Color(0xFF5A67D8),
     surfaceVariant = Color(0xFFFFFFFF),
+    outlineVariant = Color(0xFFEDF2F7)
 )
 
 @Composable

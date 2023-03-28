@@ -9,7 +9,7 @@ data class RedeemedReward(
     val rewardId: String?,
     val status: String?,
     val pointCost: Int?,
-    val imageUrls: List<String>?,
+    val images: String?,
     val reward: Reward?,
 ) {
     data class Reward(
@@ -26,6 +26,7 @@ data class RedeemedReward(
         val expiresOn: Date?,
         val pointCost: Int?,
         val redeemedRewardsCount: Int?,
+        val imageUrls: List<String>?,
     ) {
         data class Images(
             val cdnUrl: String?,
