@@ -32,6 +32,7 @@ Open `sampleapp` folder and build the project
 
 - Authenticate
 - Get reward list
+- Get reward details
 - Redeem reward
 - Get reward history
 
