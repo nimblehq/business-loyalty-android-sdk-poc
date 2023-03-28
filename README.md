@@ -197,7 +197,7 @@ Retrieves the reward history for the authenticated user.
       <th>Description</th>
    </tr>
    <tr>
-      <td rowspan="3">AuthenticationException</td>
+      <td rowspan="4">AuthenticationException</td>
       <td>UnableToInitSignInUrl</td>
       <td>Could not create the sign in URL</td>
    </tr>
@@ -208,6 +208,10 @@ Retrieves the reward history for the authenticated user.
    <tr>
       <td>UnableToAuthenticate</td>
       <td>An error occurred when attempting to sign in</td>
+   </tr>
+   <tr>
+      <td>UnauthenticatedException</td>
+      <td>Unauthorized access. Please call LoyaltySdk.getInstance().authenticate(activity) to authenticate</td>
    </tr>
    <tr>
       <td rowspan="4">InitializationException</td>
