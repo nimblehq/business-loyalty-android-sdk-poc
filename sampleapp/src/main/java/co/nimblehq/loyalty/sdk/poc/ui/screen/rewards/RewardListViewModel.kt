@@ -14,9 +14,12 @@ class RewardListViewModel @Inject constructor(
     private val repository: SampleAppRepository
 ) : ViewModel() {
 
-    val uiState: StateFlow<RewardListUiState> = repository
-        .rewards.map { data -> RewardListUiState.Success(data) }
-        .catch { RewardListUiState.Error(it) }
+    val uiState: SharedFlow<RewardListUiState> = repository
+        .rewards
+        .map { data -> RewardListUiState.Success(data) as RewardListUiState }
+        .catch { cause: Throwable ->
+            emit(RewardListUiState.Error(cause))
+        }
         .stateIn(
             viewModelScope,
             SharingStarted.WhileSubscribed(5000),

@@ -29,9 +29,9 @@ import co.nimblehq.loyalty.sdk.poc.ui.composable.RedeemedRewardImage
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun RewardHistoryScreen(
+    onNavigateBack: () -> Unit,
     modifier: Modifier,
     viewModel: RewardHistoryViewModel = hiltViewModel(),
-    onNavigateBack: () -> Unit
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
     val uiState by produceState<RewardHistoryUiState>(
