@@ -15,10 +15,23 @@ import kotlinx.coroutines.*
 
 class LoyaltySdk private constructor() : NetworkBuilder() {
 
-    companion object Builder {
+    companion object {
         // FIXME Revise this warning
         @SuppressLint("StaticFieldLeak")
         private lateinit var instance: LoyaltySdk
+
+        @JvmStatic
+        fun getInstance(): LoyaltySdk {
+            synchronized(this) {
+                if (!::instance.isInitialized) {
+                    throw InitializationException.LateInitialization
+                }
+                return instance
+            }
+        }
+    }
+
+    class Builder {
 
         // FIXME Revise this warning
         @SuppressLint("StaticFieldLeak")
@@ -34,6 +47,7 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
         fun withClientId(clientId: String) = apply { this.clientId = clientId }
 
         fun withClientSecret(clientSecret: String) = apply { this.clientSecret = clientSecret }
+
         fun init() {
             instance = LoyaltySdk().also { sdk ->
                 context?.let {
@@ -53,15 +67,6 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
                 }
 
                 sdk.setDebugMode(isDebugMode)
-            }
-        }
-
-        fun getInstance(): LoyaltySdk {
-            synchronized(this) {
-                if (!::instance.isInitialized) {
-                    throw InitializationException.LateInitialization
-                }
-                return instance
             }
         }
     }

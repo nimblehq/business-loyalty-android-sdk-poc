@@ -87,7 +87,7 @@ class MyApplication : Application() {
     override fun onCreate() {
         super.onCreate()
         // TODO Add your keys
-        LoyaltySdk.Builder
+        LoyaltySdk.Builder()
             .withContext(this)
             .withDebugMode(BuildConfig.DEBUG)
             .withClientId("CLIENT_ID")
