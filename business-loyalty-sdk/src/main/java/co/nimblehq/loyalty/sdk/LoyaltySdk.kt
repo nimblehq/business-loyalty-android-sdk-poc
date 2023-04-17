@@ -5,10 +5,7 @@ import android.content.Context
 import android.content.Intent
 import co.nimblehq.loyalty.sdk.api.mapError
 import co.nimblehq.loyalty.sdk.exception.InitializationException
-import co.nimblehq.loyalty.sdk.model.AuthenticationState
-import co.nimblehq.loyalty.sdk.model.RedeemReward
-import co.nimblehq.loyalty.sdk.model.RedeemedReward
-import co.nimblehq.loyalty.sdk.model.Reward
+import co.nimblehq.loyalty.sdk.model.*
 import co.nimblehq.loyalty.sdk.network.NetworkBuilder
 import co.nimblehq.loyalty.sdk.ui.authenticate.AuthenticationActivity
 import kotlinx.coroutines.*
@@ -70,6 +67,10 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
             }
         }
     }
+
+    /***********
+     * LOYALTY *
+     ***********/
 
     @DelicateCoroutinesApi
     fun getRewardList(onResponse: (Result<List<Reward>>) -> Unit) {
@@ -164,6 +165,26 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
         GlobalScope.launch(Dispatchers.IO) {
             val result = try {
                 val result = authenticationRepository.clearAuthenticateState()
+                Result.Success(result)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                Result.Error(exception.mapError())
+            }
+            withContext(Dispatchers.Main) {
+                onResponse(result)
+            }
+        }
+    }
+
+    /***********
+     * PRODUCT *
+     ***********/
+
+    @DelicateCoroutinesApi
+    fun getProductList(onResponse: (Result<List<Product>>) -> Unit) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = try {
+                val result = productRepository.getProductList()
                 Result.Success(result)
             } catch (exception: Exception) {
                 exception.printStackTrace()

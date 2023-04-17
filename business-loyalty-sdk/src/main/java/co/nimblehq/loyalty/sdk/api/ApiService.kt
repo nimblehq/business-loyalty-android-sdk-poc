@@ -1,14 +1,15 @@
 package co.nimblehq.loyalty.sdk.api
 
-import co.nimblehq.loyalty.sdk.api.response.RedeemRewardResponse
-import co.nimblehq.loyalty.sdk.api.response.RedeemedRewardResponse
-import co.nimblehq.loyalty.sdk.api.response.RewardResponse
-import co.nimblehq.loyalty.sdk.api.response.RewardsResponse
+import co.nimblehq.loyalty.sdk.api.response.*
 import retrofit2.http.GET
 import retrofit2.http.PATCH
 import retrofit2.http.Path
 
 interface ApiService {
+    /*************
+     ** LOYALTY **
+     ************/
+
     @GET("rewards.json")
     suspend fun getRewards(): RewardsResponse
 
@@ -24,4 +25,11 @@ interface ApiService {
 
     @GET("redeemed_rewards.json")
     suspend fun getRedeemedRewards(): List<RedeemedRewardResponse>
+
+    /*************
+     ** PRODUCT **
+     ************/
+
+    @GET("products.json")
+    suspend fun getProducts(): List<ProductResponse>
 }
