@@ -30,11 +30,14 @@ Open `sampleapp` folder and build the project
 
 ### Features
 
-- Authenticate
-- Get reward list
-- Get reward details
-- Redeem reward
-- Get reward history
+- Loyalty
+  - Authenticate
+  - Get reward list
+  - Get reward details
+  - Redeem reward
+  - Get reward history
+- e-Commerce
+  - Get product list
 
 ### Requirements
 
@@ -134,7 +137,7 @@ class MyApplication : Application() {
 Retrieves the list of available rewards for the authenticated user.
 
 ```kotlin
-    LoyaltySdk.getInstance().redeemReward(rewardId) { result ->
+    LoyaltySdk.getInstance().getRewardList { result ->
         when (result) {
             is Result.Success -> // result.data
             is Result.Error -> // result.exception
@@ -162,7 +165,7 @@ Retrieves the reward details for the authenticated user.
 Redeems a reward with the given reward's code for the authenticated user.
 
 ```kotlin
-    LoyaltySdk.getInstance().getRewardList { result ->
+    LoyaltySdk.getInstance().redeemReward(rewardId) { result ->
         when (result) {
             is Result.Success -> // result.data
             is Result.Error -> // result.exception
@@ -177,6 +180,20 @@ Retrieves the reward history for the authenticated user.
 
 ```kotlin
     LoyaltySdk.getInstance().getRedeemedRewardList { result ->
+        when (result) {
+            is Result.Success -> // result.data
+            is Result.Error -> // result.exception
+            else -> {}
+        }
+    }
+```
+
+### Get Product list
+
+Retrieves the list of available products for the authenticated user.
+
+```kotlin
+    LoyaltySdk.getInstance().getProductList { result ->
         when (result) {
             is Result.Success -> // result.data
             is Result.Error -> // result.exception
