@@ -32,4 +32,9 @@ interface ApiService {
 
     @GET("products.json")
     suspend fun getProducts(): List<ProductResponse>
+
+    @GET("products/{product_id}.json")
+    suspend fun getProductDetail(
+        @Path("product_id") productId: String
+    ): ProductResponse
 }
