@@ -38,6 +38,7 @@ Open `sampleapp` folder and build the project
   - Get reward history
 - e-Commerce
   - Get product list
+  - Get product details
 
 ### Requirements
 
@@ -194,6 +195,20 @@ Retrieves the list of available products for the authenticated user.
 
 ```kotlin
     LoyaltySdk.getInstance().getProductList { result ->
+        when (result) {
+            is Result.Success -> // result.data
+            is Result.Error -> // result.exception
+            else -> {}
+        }
+    }
+```
+
+### Get Product details
+
+Retrieves the product details for the authenticated user.
+
+```kotlin
+    LoyaltySdk.getInstance().getProductDetail(productId) { result ->
         when (result) {
             is Result.Success -> // result.data
             is Result.Error -> // result.exception
