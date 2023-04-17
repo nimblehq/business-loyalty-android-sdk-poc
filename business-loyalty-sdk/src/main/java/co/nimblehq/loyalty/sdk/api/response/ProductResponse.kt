@@ -27,16 +27,16 @@ data class ProductResponse(
 )
 
 fun ProductResponse.toModel() = Product(
-    id = id.orEmpty(),
-    organizationId = organizationId.orEmpty(),
-    name = name.orEmpty(),
-    sku = sku.orEmpty(),
-    description = description.orEmpty(),
-    price = price.orEmpty(),
-    displayPrice = displayPrice.orEmpty(),
-    createdAt = createdAt.orEmpty(),
-    updatedAt = updatedAt.orEmpty(),
-    imageUrl = imageUrl.orEmpty()
+    id = id,
+    organizationId = organizationId,
+    name = name,
+    sku = sku,
+    description = description,
+    price = price,
+    displayPrice = displayPrice,
+    createdAt = createdAt,
+    updatedAt = updatedAt,
+    imageUrl = imageUrl
 )
 
 fun List<ProductResponse>.toModels() = this.map { product -> product.toModel() }
