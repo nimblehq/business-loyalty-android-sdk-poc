@@ -27,7 +27,7 @@ import androidx.lifecycle.repeatOnLifecycle
 import co.nimblehq.loyalty.sdk.model.Reward
 import co.nimblehq.loyalty.sdk.poc.R
 import co.nimblehq.loyalty.sdk.poc.extension.toFormattedString
-import co.nimblehq.loyalty.sdk.poc.ui.composable.RewardDetailImage
+import co.nimblehq.loyalty.sdk.poc.ui.composable.ItemDetailImage
 
 @Composable
 fun RewardDetailScreen(
@@ -137,7 +137,7 @@ internal fun RewardDetailInformation(
             .verticalScroll(rememberScrollState())
     ) {
         Box(modifier = Modifier.fillMaxWidth()) {
-            RewardDetailImage(
+            ItemDetailImage(
                 imageUrl = reward.imageUrls?.firstOrNull().orEmpty(),
                 modifier = Modifier
                     .fillMaxWidth()
