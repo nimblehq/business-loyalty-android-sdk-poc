@@ -212,6 +212,26 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
         }
     }
 
+    /**********
+     ** CART **
+     **********/
+
+    @DelicateCoroutinesApi
+    fun getCart(onResponse: (Result<Cart>) -> Unit) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = try {
+                val result = cartRepository.getCart()
+                Result.Success(result)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                Result.Error(exception.mapError())
+            }
+            withContext(Dispatchers.Main) {
+                onResponse(result)
+            }
+        }
+    }
+
     /*************
      ** ORDER **
      ************/
