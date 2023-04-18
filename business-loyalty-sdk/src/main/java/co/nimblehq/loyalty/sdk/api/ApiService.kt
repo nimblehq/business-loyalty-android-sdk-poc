@@ -3,6 +3,7 @@ package co.nimblehq.loyalty.sdk.api
 import co.nimblehq.loyalty.sdk.api.response.*
 import retrofit2.http.GET
 import retrofit2.http.PATCH
+import retrofit2.http.POST
 import retrofit2.http.Path
 
 interface ApiService {
@@ -48,5 +49,10 @@ interface ApiService {
     @GET("orders/{order_id}.json")
     suspend fun getOrderDetail(
         @Path("order_id") orderId: String
+    ): OrderDetailsResponse
+
+    @POST("my_orders/{cart_id}/submit.json")
+    suspend fun submitOrder(
+        @Path("cart_id") cartId: String
     ): OrderDetailsResponse
 }

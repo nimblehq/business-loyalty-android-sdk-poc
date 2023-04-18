@@ -9,6 +9,7 @@ import co.nimblehq.loyalty.sdk.model.OrderDetails
 internal interface OrderRepository {
     suspend fun getOrderList(): List<Order>
     suspend fun getOrderDetail(orderId: String): OrderDetails
+    suspend fun submitOrder(cartId: String): OrderDetails
 }
 
 internal class OrderRepositoryImpl(
@@ -21,5 +22,9 @@ internal class OrderRepositoryImpl(
 
     override suspend fun getOrderDetail(orderId: String): OrderDetails {
         return apiService.getOrderDetail(orderId).toModel()
+    }
+
+    override suspend fun submitOrder(cartId: String): OrderDetails {
+        return apiService.submitOrder(cartId).toModel()
     }
 }
