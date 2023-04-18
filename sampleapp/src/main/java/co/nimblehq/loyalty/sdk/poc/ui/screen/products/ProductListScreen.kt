@@ -1,4 +1,4 @@
-package co.nimblehq.loyalty.sdk.poc.ui.screen.rewards
+package co.nimblehq.loyalty.sdk.poc.ui.screen.products
 
 import android.app.Activity
 import android.widget.Toast
@@ -25,22 +25,21 @@ import androidx.compose.ui.unit.dp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.repeatOnLifecycle
-import co.nimblehq.loyalty.sdk.model.Reward
+import co.nimblehq.loyalty.sdk.model.Product
 import co.nimblehq.loyalty.sdk.poc.R
-import co.nimblehq.loyalty.sdk.poc.extension.toFormattedString
 import co.nimblehq.loyalty.sdk.poc.ui.composable.ItemImage
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun RewardListScreen(
-    onNavigateRewardDetail: (String) -> Unit,
+fun ProductListScreen(
+    onNavigateProductDetail: (String) -> Unit,
     onNavigateBack: () -> Unit,
     modifier: Modifier,
-    viewModel: RewardListViewModel = hiltViewModel(),
+    viewModel: ProductListViewModel = hiltViewModel(),
 ) {
     val lifecycle = LocalLifecycleOwner.current.lifecycle
-    val uiState by produceState<RewardListUiState>(
-        initialValue = RewardListUiState.Loading,
+    val uiState by produceState<ProductListUiState>(
+        initialValue = ProductListUiState.Loading,
         key1 = lifecycle,
         key2 = viewModel
     ) {
@@ -49,40 +48,12 @@ fun RewardListScreen(
         }
     }
 
-    val redeemRewardUiState by produceState<RedeemRewardUiState>(
-        initialValue = RedeemRewardUiState.Init,
-        key1 = lifecycle,
-        key2 = viewModel
-    ) {
-        lifecycle.repeatOnLifecycle(state = Lifecycle.State.STARTED) {
-            viewModel.redeemedRewardState.collect { value = it }
-        }
-    }
-
-    val context = LocalContext.current
-    LaunchedEffect(redeemRewardUiState) {
-        when (redeemRewardUiState) {
-            is RedeemRewardUiState.Success -> {
-                context.getString(R.string.redeem_reward_success)
-            }
-            is RedeemRewardUiState.Error -> {
-                (redeemRewardUiState as RedeemRewardUiState.Error).throwable.message
-            }
-            is RedeemRewardUiState.Processing -> {
-                context.getString(R.string.redeem_reward_processing)
-            }
-            else -> null
-        }?.let { message ->
-            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
-        }
-    }
-
     Scaffold(
-        modifier = modifier,
+        modifier = modifier.padding(vertical = 8.dp),
         topBar = {
             TopAppBar(
                 title = {
-                    Text(text = stringResource(id = R.string.title_reward_list))
+                    Text(text = stringResource(id = R.string.title_product_list))
                 },
                 navigationIcon = {
                     IconButton(onClick = {
@@ -95,13 +66,10 @@ fun RewardListScreen(
             )
         }) { paddingValues ->
         Column(modifier = modifier.padding(paddingValues)) {
-            RewardListContent(
+            ProductListContent(
                 uiState = uiState,
-                onRewardItemClick = { reward ->
-                    onNavigateRewardDetail.invoke(reward.id.orEmpty())
-                },
-                onRedeemReward = { reward ->
-                    viewModel.redeemReward(reward.id.orEmpty())
+                onProductItemClick = { product ->
+                    onNavigateProductDetail.invoke(product.id.orEmpty())
                 },
             )
         }
@@ -109,10 +77,9 @@ fun RewardListScreen(
 }
 
 @Composable
-internal fun RewardListContent(
-    uiState: RewardListUiState,
-    onRewardItemClick: (Reward) -> Unit,
-    onRedeemReward: (Reward) -> Unit,
+internal fun ProductListContent(
+    uiState: ProductListUiState,
+    onProductItemClick: (Product) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val activity = LocalContext.current as Activity
@@ -121,7 +88,7 @@ internal fun RewardListContent(
         contentAlignment = Alignment.Center
     ) {
         when (uiState) {
-            is RewardListUiState.Success -> {
+            is ProductListUiState.Success -> {
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     verticalArrangement = Arrangement.spacedBy(8.dp),
@@ -130,22 +97,21 @@ internal fun RewardListContent(
                         .fillMaxSize()
                         .padding(horizontal = 8.dp)
                 ) {
-                    items(items = uiState.data) { reward ->
-                        RewardItem(
-                            reward = reward,
-                            onRewardItemClick = onRewardItemClick,
-                            onRedeemReward = onRedeemReward
+                    items(items = uiState.data) { product ->
+                        ProductItem(
+                            product = product,
+                            onProductItemClick = onProductItemClick,
                         )
                     }
                 }
             }
-            is RewardListUiState.Loading -> {
+            is ProductListUiState.Loading -> {
                 CircularProgressIndicator()
             }
             else -> {
                 Toast.makeText(
                     activity,
-                    (uiState as RewardListUiState.Error).throwable.message,
+                    (uiState as ProductListUiState.Error).throwable.message,
                     Toast.LENGTH_SHORT
                 ).show()
             }
@@ -154,10 +120,9 @@ internal fun RewardListContent(
 }
 
 @Composable
-fun RewardItem(
-    reward: Reward,
-    onRewardItemClick: (Reward) -> Unit,
-    onRedeemReward: (Reward) -> Unit
+fun ProductItem(
+    product: Product,
+    onProductItemClick: (Product) -> Unit
 ) {
     Card(
         modifier = Modifier
@@ -166,11 +131,11 @@ fun RewardItem(
                 border = BorderStroke(width = 1.dp, Color.LightGray),
                 shape = RoundedCornerShape(8.dp)
             )
-            .clickable { onRewardItemClick.invoke(reward) },
+            .clickable { onProductItemClick.invoke(product) },
     ) {
         Column {
             ItemImage(
-                imageUrl = reward.imageUrls?.firstOrNull().orEmpty(),
+                imageUrl = product.imageUrl.orEmpty(),
             )
             Column(
                 modifier = Modifier
@@ -179,28 +144,18 @@ fun RewardItem(
                 verticalArrangement = Arrangement.Top
             ) {
                 Text(
-                    text = reward.name.orEmpty(),
+                    text = product.name.orEmpty(),
                     style = MaterialTheme.typography.titleSmall,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.aspectRatio(3.25f) // FIXME Stretch items to same height
                 )
                 Text(
-                    text = reward.description.orEmpty(),
+                    text = product.description.orEmpty(),
                     style = MaterialTheme.typography.bodySmall,
                     maxLines = 2,
                     overflow = TextOverflow.Ellipsis,
                     modifier = Modifier.padding(top = 4.dp, bottom = 8.dp)
-                )
-
-                val expiresOn = reward.expiresOn?.toFormattedString()
-                Text(
-                    text = if (expiresOn.isNullOrEmpty()) {
-                        stringResource(R.string.reward_details_no_due_date)
-                    } else {
-                        stringResource(R.string.reward_details_due_date, expiresOn)
-                    },
-                    style = MaterialTheme.typography.titleSmall,
                 )
 
                 Spacer(modifier = Modifier.padding(top = 8.dp))
@@ -209,10 +164,10 @@ fun RewardItem(
                     modifier = Modifier
                         .fillMaxWidth(),
                     onClick = {
-                        onRedeemReward.invoke(reward)
+                        onProductItemClick.invoke(product)
                     }
                 ) {
-                    Text(stringResource(R.string.main_redeem_reward, reward.pointCost ?: 0))
+                    Text(stringResource(R.string.main_product_list_view_details))
                 }
             }
         }

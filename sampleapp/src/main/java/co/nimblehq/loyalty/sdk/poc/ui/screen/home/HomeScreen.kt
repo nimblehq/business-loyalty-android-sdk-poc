@@ -31,6 +31,7 @@ fun HomeScreen(
     modifier: Modifier,
     onNavigateToRewardList: () -> Unit,
     onNavigateToRewardHistory: () -> Unit,
+    onNavigateToProductList: () -> Unit,
     viewModel: HomeViewModel = hiltViewModel()
 ) {
     val activity = LocalContext.current as Activity
@@ -54,6 +55,7 @@ fun HomeScreen(
         },
         onNavigateToRewardList = onNavigateToRewardList,
         onNavigateToRewardHistory = onNavigateToRewardHistory,
+        onNavigateToProductList = onNavigateToProductList,
         onClearSession = {
             viewModel.clearSession()
         },
@@ -67,6 +69,7 @@ internal fun HomeScreenContent(
     onNavigateToAuthenticate: () -> Unit,
     onNavigateToRewardList: () -> Unit,
     onNavigateToRewardHistory: () -> Unit,
+    onNavigateToProductList: () -> Unit,
     onClearSession: () -> Unit,
     modifier: Modifier = Modifier
 ) {
@@ -118,6 +121,17 @@ internal fun HomeScreenContent(
                             icon = R.drawable.ic_history,
                             onClick = {
                                 onNavigateToRewardHistory.invoke()
+                            }
+                        )
+                    }
+
+                    // Product List
+                    AnimatedVisibility(visible = isAuthenticated) {
+                        IconTextButton(
+                            text = stringResource(id = R.string.main_product_list),
+                            icon = R.drawable.ic_products,
+                            onClick = {
+                                onNavigateToProductList.invoke()
                             }
                         )
                     }

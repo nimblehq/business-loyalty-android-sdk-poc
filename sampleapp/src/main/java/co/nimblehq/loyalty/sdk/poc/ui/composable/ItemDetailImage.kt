@@ -15,7 +15,7 @@ import co.nimblehq.loyalty.sdk.poc.R
 import coil.compose.SubcomposeAsyncImage
 
 @Composable
-fun RewardImage(
+fun ItemDetailImage(
     imageUrl: String,
     modifier: Modifier = Modifier
 ) {
@@ -30,7 +30,7 @@ fun RewardImage(
                 CircularProgressIndicator(
                     modifier = modifier
                         .align(Alignment.Center)
-                        .size(24.dp),
+                        .size(48.dp),
                     strokeWidth = 2.dp
                 )
             }
@@ -41,15 +41,12 @@ fun RewardImage(
                 contentDescription = null,
                 modifier = modifier
                     .background(MaterialTheme.colorScheme.inverseOnSurface)
-                    .fillMaxWidth()
-                    .heightIn(max = 126.dp)
                     .padding(16.dp)
             )
         },
         contentDescription = null,
-        modifier = Modifier
+        contentScale = ContentScale.FillWidth,
+        modifier = modifier
             .fillMaxWidth()
-            .heightIn(max = 126.dp),
-        contentScale = ContentScale.Crop
     )
 }

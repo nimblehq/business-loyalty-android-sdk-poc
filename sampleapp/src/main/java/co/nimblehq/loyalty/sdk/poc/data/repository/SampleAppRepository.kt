@@ -2,10 +2,7 @@ package co.nimblehq.loyalty.sdk.poc.data.repository
 
 import co.nimblehq.loyalty.sdk.LoyaltySdk
 import co.nimblehq.loyalty.sdk.Result
-import co.nimblehq.loyalty.sdk.model.AuthenticationState
-import co.nimblehq.loyalty.sdk.model.RedeemReward
-import co.nimblehq.loyalty.sdk.model.RedeemedReward
-import co.nimblehq.loyalty.sdk.model.Reward
+import co.nimblehq.loyalty.sdk.model.*
 import kotlinx.coroutines.DelicateCoroutinesApi
 import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.flow
@@ -21,6 +18,9 @@ interface SampleAppRepository {
     fun getRewardDetail(rewardId: String): Flow<Reward>
     fun redeemReward(rewardId: String): Flow<RedeemReward>
     fun clearSession(): Flow<Unit>
+
+    val products: Flow<List<Product>>
+    fun getProductDetail(productId: String): Flow<Product>
 }
 
 @OptIn(DelicateCoroutinesApi::class)
@@ -56,6 +56,18 @@ class SampleAppRepositoryImpl @Inject constructor() : SampleAppRepository {
     override fun clearSession(): Flow<Unit> = flow {
         val result = clearSessionStateFromSdk()
         emit(result)
+    }
+
+    override val products: Flow<List<Product>> = flow {
+        val result = getProductListFromSdk()
+        emit(result)
+    }
+
+    override fun getProductDetail(productId: String): Flow<Product> {
+        return flow {
+            val result = getProductDetailFromSdk(productId)
+            emit(result)
+        }
     }
 
     private suspend fun getRewardListFromSdk() = suspendCoroutine { continuation ->
@@ -119,4 +131,25 @@ class SampleAppRepositoryImpl @Inject constructor() : SampleAppRepository {
             }
         }
     }
+
+    private suspend fun getProductListFromSdk() = suspendCoroutine { continuation ->
+        LoyaltySdk.getInstance().getProductList { result ->
+            when (result) {
+                is Result.Success -> continuation.resume(result.data)
+                is Result.Error -> continuation.resumeWithException(result.exception)
+                else -> {}
+            }
+        }
+    }
+
+    private suspend fun getProductDetailFromSdk(productId: String) =
+        suspendCoroutine { continuation ->
+            LoyaltySdk.getInstance().getProductDetail(productId) { result ->
+                when (result) {
+                    is Result.Success -> continuation.resume(result.data)
+                    is Result.Error -> continuation.resumeWithException(result.exception)
+                    else -> {}
+                }
+            }
+        }
 }
