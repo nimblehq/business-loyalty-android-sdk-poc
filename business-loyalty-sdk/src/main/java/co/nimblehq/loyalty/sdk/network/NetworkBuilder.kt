@@ -7,10 +7,7 @@ import co.nimblehq.loyalty.sdk.api.AuthenticationService
 import co.nimblehq.loyalty.sdk.api.interceptor.AuthorizationInterceptor
 import co.nimblehq.loyalty.sdk.persistence.AuthPersistence
 import co.nimblehq.loyalty.sdk.persistence.PersistenceProvider
-import co.nimblehq.loyalty.sdk.repository.AuthenticationRepository
-import co.nimblehq.loyalty.sdk.repository.AuthenticationRepositoryImpl
-import co.nimblehq.loyalty.sdk.repository.RewardRepository
-import co.nimblehq.loyalty.sdk.repository.RewardRepositoryImpl
+import co.nimblehq.loyalty.sdk.repository.*
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
@@ -31,6 +28,9 @@ abstract class NetworkBuilder {
     internal val rewardRepository: RewardRepository by lazy { RewardRepositoryImpl(apiService) }
     internal val authenticationRepository: AuthenticationRepository by lazy {
         AuthenticationRepositoryImpl(authenticationService, authPersistence)
+    }
+    internal val productRepository: ProductRepository by lazy {
+        ProductRepositoryImpl(apiService)
     }
 
     private lateinit var context: Context
