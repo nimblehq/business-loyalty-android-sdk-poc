@@ -7,7 +7,7 @@ import retrofit2.http.Path
 
 interface ApiService {
     /*************
-     ** LOYALTY **
+     ** REWARD **
      ************/
 
     @GET("rewards.json")

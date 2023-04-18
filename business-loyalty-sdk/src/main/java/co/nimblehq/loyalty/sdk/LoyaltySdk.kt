@@ -68,9 +68,9 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
         }
     }
 
-    /***********
-     * LOYALTY *
-     ***********/
+    /*************
+     ** REWARD **
+     ************/
 
     @DelicateCoroutinesApi
     fun getRewardList(onResponse: (Result<List<Reward>>) -> Unit) {
@@ -176,9 +176,9 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
         }
     }
 
-    /***********
-     * PRODUCT *
-     ***********/
+    /*************
+     ** PRODUCT **
+     ************/
 
     @DelicateCoroutinesApi
     fun getProductList(onResponse: (Result<List<Product>>) -> Unit) {
