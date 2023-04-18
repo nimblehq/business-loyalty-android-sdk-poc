@@ -211,4 +211,24 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
             }
         }
     }
+
+    /*************
+     ** ORDER **
+     ************/
+
+    @DelicateCoroutinesApi
+    fun getOrderList(onResponse: (Result<List<Order>>) -> Unit) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = try {
+                val result = orderRepository.getOrderList()
+                Result.Success(result)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                Result.Error(exception.mapError())
+            }
+            withContext(Dispatchers.Main) {
+                onResponse(result)
+            }
+        }
+    }
 }

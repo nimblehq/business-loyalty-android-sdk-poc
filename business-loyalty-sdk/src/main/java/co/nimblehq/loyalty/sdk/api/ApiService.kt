@@ -37,4 +37,11 @@ interface ApiService {
     suspend fun getProductDetail(
         @Path("product_id") productId: String
     ): ProductResponse
+
+    /***********
+     ** ORDER **
+     ***********/
+
+    @GET("my_orders.json")
+    suspend fun getOrders(): List<OrderResponse>
 }
