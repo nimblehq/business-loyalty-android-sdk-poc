@@ -195,4 +195,20 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
             }
         }
     }
+
+    @DelicateCoroutinesApi
+    fun getProductDetail(productId: String, onResponse: (Result<Product>) -> Unit) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = try {
+                val result = productRepository.getProductDetail(productId)
+                Result.Success(result)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                Result.Error(exception.mapError())
+            }
+            withContext(Dispatchers.Main) {
+                onResponse(result)
+            }
+        }
+    }
 }
