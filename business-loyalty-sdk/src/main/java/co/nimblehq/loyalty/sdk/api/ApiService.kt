@@ -1,10 +1,9 @@
 package co.nimblehq.loyalty.sdk.api
 
+import co.nimblehq.loyalty.sdk.api.request.AddCartItemRequest
+import co.nimblehq.loyalty.sdk.api.request.UpdateCartItemQuantityRequest
 import co.nimblehq.loyalty.sdk.api.response.*
-import retrofit2.http.GET
-import retrofit2.http.PATCH
-import retrofit2.http.POST
-import retrofit2.http.Path
+import retrofit2.http.*
 
 interface ApiService {
     /*************
@@ -45,6 +44,22 @@ interface ApiService {
 
     @GET("cart.json")
     suspend fun getCart(): CartResponse
+
+    @POST("order_line_items.json")
+    suspend fun addCartItem(
+        @Body request: AddCartItemRequest
+    ): CartResponse
+
+    @PATCH("order_line_items/{item_id}.json")
+    suspend fun updateCartItemQuantity(
+        @Path("item_id") itemId: String,
+        @Body request: UpdateCartItemQuantityRequest
+    ): CartResponse
+
+    @DELETE("order_line_items/{item_id}.json")
+    suspend fun removeCartItem(
+        @Path("item_id") itemId: String,
+    ): CartResponse
 
     /***********
      ** ORDER **

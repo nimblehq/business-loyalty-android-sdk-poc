@@ -232,6 +232,60 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
         }
     }
 
+    @DelicateCoroutinesApi
+    fun addCartItem(addCartItem: AddCartItem, onResponse: (Result<Cart>) -> Unit) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = try {
+                val result = cartRepository.addCartItem(addCartItem)
+                Result.Success(result)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                Result.Error(exception.mapError())
+            }
+            withContext(Dispatchers.Main) {
+                onResponse(result)
+            }
+        }
+    }
+
+    @DelicateCoroutinesApi
+    fun updateCartItemQuantity(
+        updateCartItemQuantity: UpdateCartItemQuantity,
+        onResponse: (Result<Cart>) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = try {
+                val result = cartRepository.updateCartItemQuantity(updateCartItemQuantity)
+                Result.Success(result)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                Result.Error(exception.mapError())
+            }
+            withContext(Dispatchers.Main) {
+                onResponse(result)
+            }
+        }
+    }
+
+    @DelicateCoroutinesApi
+    fun removeCartItem(
+        itemId: String,
+        onResponse: (Result<Cart>) -> Unit
+    ) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = try {
+                val result = cartRepository.removeCartItem(itemId)
+                Result.Success(result)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                Result.Error(exception.mapError())
+            }
+            withContext(Dispatchers.Main) {
+                onResponse(result)
+            }
+        }
+    }
+
     /*************
      ** ORDER **
      ************/
