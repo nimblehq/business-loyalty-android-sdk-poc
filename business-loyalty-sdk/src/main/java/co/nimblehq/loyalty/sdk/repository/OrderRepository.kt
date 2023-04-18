@@ -1,11 +1,14 @@
 package co.nimblehq.loyalty.sdk.repository
 
 import co.nimblehq.loyalty.sdk.api.ApiService
+import co.nimblehq.loyalty.sdk.api.response.toModel
 import co.nimblehq.loyalty.sdk.api.response.toModels
 import co.nimblehq.loyalty.sdk.model.Order
+import co.nimblehq.loyalty.sdk.model.OrderDetails
 
 internal interface OrderRepository {
     suspend fun getOrderList(): List<Order>
+    suspend fun getOrderDetail(orderId: String): OrderDetails
 }
 
 internal class OrderRepositoryImpl(
@@ -14,5 +17,9 @@ internal class OrderRepositoryImpl(
 
     override suspend fun getOrderList(): List<Order> {
         return apiService.getOrders().toModels()
+    }
+
+    override suspend fun getOrderDetail(orderId: String): OrderDetails {
+        return apiService.getOrderDetail(orderId).toModel()
     }
 }
