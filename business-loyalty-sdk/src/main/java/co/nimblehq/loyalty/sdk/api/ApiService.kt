@@ -42,6 +42,6 @@ interface ApiService {
      ** ORDER **
      ***********/
 
-    @GET("my_orders.json")
+    @GET("orders.json")
     suspend fun getOrders(): List<OrderResponse>
 }
