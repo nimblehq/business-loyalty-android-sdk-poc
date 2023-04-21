@@ -27,6 +27,7 @@ data class OrderDetails(
         val status: String? = null,
         val createdAt: String? = null,
         val updatedAt: String? = null,
-        val orderId: String? = null
+        val orderId: String? = null,
+        val product: Product? = null
     )
 }

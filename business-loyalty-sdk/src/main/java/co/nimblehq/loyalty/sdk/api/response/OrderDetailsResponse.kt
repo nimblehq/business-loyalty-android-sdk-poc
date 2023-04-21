@@ -56,6 +56,8 @@ data class OrderDetailsResponse(
         val updatedAt: String? = null,
         @Json(name = "order_id")
         val orderId: String? = null,
+        @Json(name = "product")
+        val product: ProductResponse? = null,
     )
 }
 
@@ -88,6 +90,7 @@ fun OrderDetailsResponse.OrderLineItemResponse.toModel() = OrderDetails.OrderLin
     createdAt = createdAt,
     updatedAt = updatedAt,
     orderId = orderId,
+    product = product?.toModel(),
 )
 
 fun List<OrderDetailsResponse.OrderLineItemResponse>.toModels() =
