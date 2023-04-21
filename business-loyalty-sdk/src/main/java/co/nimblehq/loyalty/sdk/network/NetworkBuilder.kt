@@ -35,6 +35,9 @@ abstract class NetworkBuilder {
     internal val orderRepository: OrderRepository by lazy {
         OrderRepositoryImpl(apiService)
     }
+    internal val cartRepository: CartRepository by lazy {
+        CartRepositoryImpl(apiService)
+    }
 
     private lateinit var context: Context
     private var debugMode = false

@@ -40,6 +40,13 @@ interface ApiService {
     ): ProductResponse
 
     /***********
+     ** CART **
+     ***********/
+
+    @GET("cart.json")
+    suspend fun getCart(): CartResponse
+
+    /***********
      ** ORDER **
      ***********/
 
