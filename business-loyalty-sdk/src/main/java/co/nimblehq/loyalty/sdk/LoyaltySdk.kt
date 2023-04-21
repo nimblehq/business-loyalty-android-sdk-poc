@@ -247,4 +247,20 @@ class LoyaltySdk private constructor() : NetworkBuilder() {
             }
         }
     }
+
+    @DelicateCoroutinesApi
+    fun submitOrder(cartId: String, onResponse: (Result<OrderDetails>) -> Unit) {
+        GlobalScope.launch(Dispatchers.IO) {
+            val result = try {
+                val result = orderRepository.submitOrder(cartId)
+                Result.Success(result)
+            } catch (exception: Exception) {
+                exception.printStackTrace()
+                Result.Error(exception.mapError())
+            }
+            withContext(Dispatchers.Main) {
+                onResponse(result)
+            }
+        }
+    }
 }
