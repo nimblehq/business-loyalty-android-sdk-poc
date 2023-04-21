@@ -51,7 +51,7 @@ interface ApiService {
         @Path("order_id") orderId: String
     ): OrderDetailsResponse
 
-    @POST("my_orders/{cart_id}/submit.json")
+    @POST("orders/{cart_id}/submit.json")
     suspend fun submitOrder(
         @Path("cart_id") cartId: String
     ): OrderDetailsResponse
