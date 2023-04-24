@@ -23,6 +23,7 @@
     <string name="title_reward_history">Reward History</string>
     <string name="title_reward_details">Reward Details</string>
     <string name="title_product_list">Product List</string>
+    <string name="title_cart">Cart</string>
 
     <string name="redeem_reward_success">Redeemed Reward Successfully</string>
     <string name="redeem_reward_processing">Processing…</string>
@@ -35,4 +36,21 @@
     <string name="reward_details_redeem">Redeem %d Point(s)</string>
 
     <string name="product_details_price">%s SGD</string>
+    <string name="product_details_add_to_cart">Add to cart</string>
+
+    <string name="cart_order_item_quantity">x%d</string>
+    <string name="cart_order_price_with_currency">%1$s %2$s</string>
+    <string name="cart_sub_total">Subtotal</string>
+    <string name="cart_total_shipment_cost">Shipment cost</string>
+    <string name="cart_total">Total</string>
+    <string name="cart_empty_title">Oppps!</string>
+    <string name="cart_empty_description">You still don\'t have products in your cart</string>
+    <string name="cart_remove_item_confirmation_title">Confirmation</string>
+    <string name="cart_remove_item_confirmation_message">Are you sure you want to remove this item from your cart?</string>
+
+    <string name="remove_cart_item_success">Item Removed Successfully</string>
+    <string name="remove_cart_item_processing">Processing…</string>
+
+    <string name="add_cart_item_success">Item Added Successfully</string>
+    <string name="add_cart_item_processing">Processing…</string>
 </resources>

@@ -8,6 +8,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.navArgument
+import co.nimblehq.loyalty.sdk.poc.ui.screen.cart.CartScreen
 import co.nimblehq.loyalty.sdk.poc.ui.screen.detail.RewardDetailScreen
 import co.nimblehq.loyalty.sdk.poc.ui.screen.history.RewardHistoryScreen
 import co.nimblehq.loyalty.sdk.poc.ui.screen.home.HomeScreen
@@ -24,6 +25,7 @@ private const val NAVIGATION_ROUTE_REWARD_HISTORY = "reward_history"
 private const val NAVIGATION_ROUTE_REWARD_DETAILS = "reward_details"
 private const val NAVIGATION_ROUTE_PRODUCT_LIST = "product_list"
 private const val NAVIGATION_ROUTE_PRODUCT_DETAILS = "product_details"
+private const val NAVIGATION_ROUTE_CART = "cart"
 
 @Composable
 fun SampleAppNavigation() {
@@ -86,6 +88,9 @@ fun SampleAppNavigation() {
                         "$NAVIGATION_ROUTE_PRODUCT_DETAILS/$productId",
                     )
                 },
+                onNavigateToCart = {
+                    navController.navigate(NAVIGATION_ROUTE_CART)
+                },
                 onNavigateBack = {
                     navController.navigateUp()
                 },
@@ -100,6 +105,14 @@ fun SampleAppNavigation() {
             ProductDetailScreen(
                 productId = backStackEntry.arguments?.getString(NAVIGATION_ARGUMENT_PRODUCT_ID)
                     .orEmpty(),
+                onNavigateBack = {
+                    navController.navigateUp()
+                },
+                modifier = Modifier.fillMaxSize()
+            )
+        }
+        composable(NAVIGATION_ROUTE_CART) {
+            CartScreen(
                 onNavigateBack = {
                     navController.navigateUp()
                 },

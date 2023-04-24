@@ -9,10 +9,7 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.Divider
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Text
+import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -53,9 +50,40 @@ fun ProductDetailScreen(
         viewModel.getProductDetail(productId)
     }
 
+    val addCartItemState by produceState<AddCartItemUiState>(
+        initialValue = AddCartItemUiState.Init,
+        key1 = lifecycle,
+        key2 = viewModel
+    ) {
+        lifecycle.repeatOnLifecycle(state = Lifecycle.State.STARTED) {
+            viewModel.addCartItemState.collect { value = it }
+        }
+    }
+
+    val context = LocalContext.current
+    LaunchedEffect(addCartItemState) {
+        when (addCartItemState) {
+            is AddCartItemUiState.Success -> {
+                context.getString(R.string.add_cart_item_success)
+            }
+            is AddCartItemUiState.Error -> {
+                (addCartItemState as AddCartItemUiState.Error).throwable.message
+            }
+            is AddCartItemUiState.Processing -> {
+                context.getString(R.string.add_cart_item_processing)
+            }
+            else -> null
+        }?.let { message ->
+            Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
+        }
+    }
+
     ProductDetailContent(
         uiState = uiState,
         onNavigateBack = onNavigateBack,
+        onAddToCart = { product ->
+            viewModel.addCartItem(productId = product.id.orEmpty())
+        },
         modifier = modifier
     )
 }
@@ -64,6 +92,7 @@ fun ProductDetailScreen(
 internal fun ProductDetailContent(
     uiState: ProductDetailUiState,
     onNavigateBack: () -> Unit,
+    onAddToCart: (Product) -> Unit,
     modifier: Modifier = Modifier
 ) {
     val activity = LocalContext.current as Activity
@@ -76,6 +105,7 @@ internal fun ProductDetailContent(
                 ProductDetailInformation(
                     product = uiState.data,
                     onNavigateBack = onNavigateBack,
+                    onAddToCart = onAddToCart,
                     modifier = modifier
                 )
             }
@@ -97,6 +127,7 @@ internal fun ProductDetailContent(
 internal fun ProductDetailInformation(
     product: Product,
     onNavigateBack: () -> Unit,
+    onAddToCart: (Product) -> Unit,
     modifier: Modifier = Modifier
 ) {
     Column(
@@ -149,6 +180,17 @@ internal fun ProductDetailInformation(
                 text = product.description.orEmpty(),
                 style = MaterialTheme.typography.bodyMedium,
             )
+
+            Button(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(8.dp),
+                onClick = {
+                    onAddToCart(product)
+                }
+            ) {
+                Text(stringResource(R.string.product_details_add_to_cart))
+            }
         }
     }
 }

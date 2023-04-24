@@ -21,6 +21,10 @@ interface SampleAppRepository {
 
     val products: Flow<List<Product>>
     fun getProductDetail(productId: String): Flow<Product>
+
+    val cart: Flow<Cart>
+    fun addCartItem(addCartItem: AddCartItem): Flow<Cart>
+    fun removeCartItem(itemId: String): Flow<Cart>
 }
 
 @OptIn(DelicateCoroutinesApi::class)
@@ -68,6 +72,21 @@ class SampleAppRepositoryImpl @Inject constructor() : SampleAppRepository {
             val result = getProductDetailFromSdk(productId)
             emit(result)
         }
+    }
+
+    override val cart: Flow<Cart> = flow {
+        val result = getCartFromSdk()
+        emit(result)
+    }
+
+    override fun addCartItem(addCartItem: AddCartItem) = flow {
+        val result = addCartItemFromSdk(addCartItem)
+        emit(result)
+    }
+
+    override fun removeCartItem(itemId: String) = flow {
+        val result = removeCartItemFromSdk(itemId)
+        emit(result)
     }
 
     private suspend fun getRewardListFromSdk() = suspendCoroutine { continuation ->
@@ -152,4 +171,36 @@ class SampleAppRepositoryImpl @Inject constructor() : SampleAppRepository {
                 }
             }
         }
+
+    private suspend fun getCartFromSdk() =
+        suspendCoroutine { continuation ->
+            LoyaltySdk.getInstance().getCart { result ->
+                when (result) {
+                    is Result.Success -> continuation.resume(result.data)
+                    is Result.Error -> continuation.resumeWithException(result.exception)
+                    else -> {}
+                }
+            }
+        }
+
+    private suspend fun addCartItemFromSdk(addCartItem: AddCartItem) =
+        suspendCoroutine { continuation ->
+            LoyaltySdk.getInstance().addCartItem(addCartItem) { result ->
+                when (result) {
+                    is Result.Success -> continuation.resume(result.data)
+                    is Result.Error -> continuation.resumeWithException(result.exception)
+                    else -> {}
+                }
+            }
+        }
+
+    private suspend fun removeCartItemFromSdk(itemId: String) = suspendCoroutine { continuation ->
+        LoyaltySdk.getInstance().removeCartItem(itemId) { result ->
+            when (result) {
+                is Result.Success -> continuation.resume(result.data)
+                is Result.Error -> continuation.resumeWithException(result.exception)
+                else -> {}
+            }
+        }
+    }
 }
