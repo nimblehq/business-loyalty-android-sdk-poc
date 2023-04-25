@@ -12,6 +12,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ArrowBack
+import androidx.compose.material.icons.filled.ShoppingCart
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
@@ -28,11 +29,13 @@ import androidx.lifecycle.repeatOnLifecycle
 import co.nimblehq.loyalty.sdk.model.Product
 import co.nimblehq.loyalty.sdk.poc.R
 import co.nimblehq.loyalty.sdk.poc.ui.composable.ItemImage
+import co.nimblehq.loyalty.sdk.poc.ui.theme.Blue
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
 fun ProductListScreen(
     onNavigateProductDetail: (String) -> Unit,
+    onNavigateToCart: () -> Unit,
     onNavigateBack: () -> Unit,
     modifier: Modifier,
     viewModel: ProductListViewModel = hiltViewModel(),
@@ -60,6 +63,13 @@ fun ProductListScreen(
                         onNavigateBack.invoke()
                     }) {
                         Icon(Icons.Filled.ArrowBack, null)
+                    }
+                },
+                actions = {
+                    IconButton(onClick = {
+                        onNavigateToCart.invoke()
+                    }) {
+                        Icon(Icons.Filled.ShoppingCart, tint = Blue, contentDescription = null)
                     }
                 },
                 colors = TopAppBarDefaults.smallTopAppBarColors()
