@@ -5,12 +5,23 @@ import co.nimblehq.loyalty.sdk.BuildConfig
 import co.nimblehq.loyalty.sdk.api.ApiService
 import co.nimblehq.loyalty.sdk.api.AuthenticationService
 import co.nimblehq.loyalty.sdk.api.interceptor.AuthorizationInterceptor
+import co.nimblehq.loyalty.sdk.exception.InitializationException
 import co.nimblehq.loyalty.sdk.persistence.AuthPersistence
 import co.nimblehq.loyalty.sdk.persistence.PersistenceProvider
-import co.nimblehq.loyalty.sdk.repository.*
+import co.nimblehq.loyalty.sdk.repository.AuthenticationRepository
+import co.nimblehq.loyalty.sdk.repository.AuthenticationRepositoryImpl
+import co.nimblehq.loyalty.sdk.repository.CartRepository
+import co.nimblehq.loyalty.sdk.repository.CartRepositoryImpl
+import co.nimblehq.loyalty.sdk.repository.OrderRepository
+import co.nimblehq.loyalty.sdk.repository.OrderRepositoryImpl
+import co.nimblehq.loyalty.sdk.repository.ProductRepository
+import co.nimblehq.loyalty.sdk.repository.ProductRepositoryImpl
+import co.nimblehq.loyalty.sdk.repository.RewardRepository
+import co.nimblehq.loyalty.sdk.repository.RewardRepositoryImpl
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import java.lang.ref.WeakReference
 import java.util.concurrent.TimeUnit
 
 private const val CONNECTION_TIMEOUT_IN_SECOND = 30L
@@ -19,7 +30,7 @@ private const val READ_TIMEOUT_IN_SECOND = 30L
 abstract class NetworkBuilder {
     private val authPersistence: AuthPersistence by lazy {
         PersistenceProvider.getAuthPersistence(
-            context
+            context.get() ?: throw InitializationException.InvalidContext
         )
     }
     private val apiService: ApiService by lazy { buildService() }
@@ -39,13 +50,13 @@ abstract class NetworkBuilder {
         CartRepositoryImpl(apiService)
     }
 
-    private lateinit var context: Context
+    private lateinit var context: WeakReference<Context>
     private var debugMode = false
     internal var clientId = ""
     internal var clientSecret = ""
 
     fun setContext(context: Context) {
-        this.context = context
+        this.context = WeakReference(context.applicationContext)
     }
 
     fun setDebugMode(debugMode: Boolean) {
